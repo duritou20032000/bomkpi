@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="head"></div>
+    <!-- DataTables -->
+    <link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap.css"/>
+    <title>加工单管理</title>
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini ">
+<div class="wrapper">
+
+    <div th:replace="header"></div>
+    <div th:replace="sidebar"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+
+                    <div class="box">
+                        <div class="box-body">
+                            <table id="dataTable" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>序号</th>
+
+                                    <th>加工单编码</th>
+                                    <th>仓库编码</th>
+                                    <th>仓库名称</th>
+                                    <th>加工单类型</th>
+                                    <th>最后期限</th>
+                                    <th>同步时间</th>
+                                    <th>产成品编码</th>
+                                    <th>产成品名称</th>
+                                    <th>产成品预期总数量</th>
+                                    <th>产成品单位</th>
+                                    <th>关单人</th>
+                                    <th>加工任务完成时间</th>
+                                    <th>加工任务状态</th>
+                                    <th>拆单</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="order:${orders}">
+                                    <td th:text="${order.id}" hidden="true">1</td>
+                                    <td th:text="${orderStat.count}">1</td>
+
+                                    <td th:text="${order.worksheetCode}">worksheetCode</td>
+                                    <td th:text="${order.whseCode}">whseCode</td>
+                                    <td th:text="${order.whseName}">whseName</td>
+                                    <td th:text="${order.worksheetType}">worksheetType</td>
+                                    <td th:text="${#dates.format(order.deadline,'yyyy-MM-dd HH:mm:ss')}">2018-05-25</td>
+                                    <td th:text="${#dates.format(order.syncDate,'yyyy-MM-dd HH:mm:ss')}">2018-05-25</td>
+                                    <td th:text="${order.productCode}">productCode</td>
+                                    <td th:text="${order.productName}">productName</td>
+                                    <td th:text="${order.productCount}">productCount</td>
+                                    <td th:text="${order.productUnit}">productUnit</td>
+                                    <td th:text="${order.closerName}">closerName</td>
+                                    <td th:text="${#dates.format(order.finishDate,'yyyy-MM-dd HH:mm:ss')}">2018-05-25</td>
+                                    <td th:text="${order.pluginStatus}==0?'禁用':'启用'" id="status">status</td>
+                                    <td style="text-align: center">
+                                        <a th:href="@{/order/form(id=${order.id})}"><span class="glyphicon glyphicon-edit" title="编辑"></span></a>
+                                    </td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+
+</div>
+
+<div th:replace="script"></div>
+
+<!-- page script -->
+<script>
+    $(function () {
+        $('#dataTable').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false
+        });
+    });
+</script>
+<!--<script th:src="@{/js/list-page.js}"></script>-->
+</body>
+</html>
