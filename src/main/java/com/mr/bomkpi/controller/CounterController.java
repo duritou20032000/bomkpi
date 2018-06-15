@@ -13,11 +13,11 @@ public class CounterController {
 //    @Autowired
 //    private CounterService counterService;
 
-    @GetMapping("/getCounters")
+    @GetMapping("/counter/getCounters")
     public String getCounter(Model model){
 //        List<TaskCounter> counters =  counterService.queryList();
 //        model.addAttribute("counters",counters);
-        return "/counter/test";
+        return "/counter/list";
     }
 
 

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class TeamTaskController {
 
-    @GetMapping("/getTeamTasks")
+    @GetMapping("/teamTask/getTeamTasks")
     public String getTeamTasks(Model model){
         return "/team/list";
     }

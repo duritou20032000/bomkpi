@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class SingleTaskController {
 
-    @GetMapping("/getSingleTasks")
+    @GetMapping("/singleTask/getSingleTasks")
     public String getSingleTasks(Model model){
         return "/single/list";
     }

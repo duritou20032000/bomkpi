@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <title>BOM&KPI </title>
     <div th:replace="head"></div>
@@ -51,7 +52,7 @@
     <div class="login-box-body">
         <p class="login-box-msg"></p>
 
-        <form th:action="@{/login}" method="post">
+        <form action="/login" method="post">
             <div class="form-group has-feedback">
                 <input type="text" class="form-control" placeholder="username" name="username" required="required"/>
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
@@ -100,15 +101,15 @@
 
     <!-- iCheck -->
     <script src="/plugins/iCheck/icheck.min.js"></script>
-    <script>
-        $(function () {
-            $('input').iCheck({
-                checkboxClass: 'icheckbox_square-blue',
-                radioClass: 'iradio_square-blue',
-                increaseArea: '20%' // optional
-            });
-        });
-    </script>
+    <!--<script>-->
+        <!--$(function () {-->
+            <!--$('input').iCheck({-->
+                <!--checkboxClass: 'icheckbox_square-blue',-->
+                <!--radioClass: 'iradio_square-blue',-->
+                <!--increaseArea: '20%' // optional-->
+            <!--});-->
+        <!--});-->
+    <!--</script>-->
 </div>
 </body>
 </html>

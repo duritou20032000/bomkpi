@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class OrderController {
 
-    @GetMapping("/getOrders")
+    @GetMapping("/order/getOrders")
     public String getOrders(Model model){
         return "/order/list";
     }

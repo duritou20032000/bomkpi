@@ -5,11 +5,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class SysController {
+public class UserController {
 
-    @GetMapping("/sys/getSystems")
-    public String getSystems(Model model){
-        return "/sys/list";
+    @GetMapping("/user/index")
+    public String index(Model model){
+        return "welcome";
     }
 
 }

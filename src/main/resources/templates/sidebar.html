@@ -14,32 +14,35 @@
                     </span>
                 </a>
                 <ul class="treeview-menu" th:each="second:${nav.childNodes}">
-                    <li th:name="${second.id}" th:data="${currentMenu}" th:class="(${second.id}==${currentMenu})?'active':''"><a href="#" th:href="@{${second.url}}"><i class="fa fa-circle-o"></i> <span
-                            th:text="${second.label}">label</span></a></li>
+                    <li th:name="${second.id}" th:data="${currentMenu}" th:class="(${second.id}==${currentMenu})?'active':''">
+                        <a href="#" th:href="@{${second.url}}">
+                            <i class="fa fa-circle-o"></i>
+                            <span th:text="${second.label}">label</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             <li class="treeview active">
-                <a th:href="@{/counter/queryAll}">counter</a>
+                <a href="/counter/getCounters">柜台详情</a>
             </li>
             <li class="treeview active">
-                <a th:href="@{/order/queryAll}">order</a>
+                <a href="/order/getOrders">订单详情</a>
             </li>
             <li class="treeview active">
-                <a th:href="@{/task/queryAll}">task</a>
+                <a th:href="@{/task/getTasks}">任务详情</a>
             </li>
             <li class="treeview active">
-                <a th:href="@{/task/queryAll/singel}">singelTask</a>
+                <a th:href="@{/singleTask/getSingleTasks}">单人任务详情</a>
             </li>
             <li class="treeview active">
-                <a th:href="@{/task/queryAll/team}">teamTask</a>
+                <a th:href="@{/teamTask/getTeamTasks}">团队工作详情</a>
             </li>
             <li class="treeview active">
-                <a th:href="@{/kpi/queryAll}">KPI</a>
+                <a th:href="@{/check/getChecks}">质检详情</a>
             </li>
             <li class="treeview active">
-                <a th:href="@{/kpi/queryAll/person}">personKPI</a>
+                <a th:href="@{/kpi/getKips}">绩效详情</a>
             </li>
-
         </ul>
     </section>
     <!-- /.sidebar -->
