@@ -35,7 +35,7 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests()
-                //要求身份和权限验证 这种.antMatchers("/db/**").access("hasRole('ADMIN') and hasRole('DBA')")  要两个条件都具备才行
+                //要求授权 这种.antMatchers("/db/**").access("hasRole('ADMIN') and hasRole('DBA')")  要两个条件都具备才行
                 .antMatchers("/bootstrap/**", "/dist/**", "/js/**", "/plugins/**", "/images/**", "/", "/login").permitAll()
                 .antMatchers("/counter/**").hasAnyRole("kuguan")
                 .antMatchers("/order/**").hasRole("kuguan")
@@ -43,7 +43,7 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/singleTask/**", "/teamTask/**").hasRole("caozuogong")
                 .antMatchers("/check/**").hasRole("check")
                 .antMatchers("/kpi/**").hasRole("check")
-                //其余的只要求身份验证
+                //其余的只要求身份认证
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -59,8 +59,8 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         //内存明文密码
 //        auth.inMemoryAuthentication().withUser("admin").password("123456").roles("admin");
-//数据库保存的密码
-        auth.userDetailsService(myUserDetailService).passwordEncoder(new BCryptPasswordEncoder());
+//数据库保存的密码，这里注意要加密passwordEncoder，很多视频没讲这里
+        auth.userDetailsService(myUserDetailService).passwordEncoder(new PasswordUtil());
 
     }
 

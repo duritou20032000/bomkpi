@@ -27,10 +27,10 @@ public class MyUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 //E:1524710989265:dd76ff0602e1285b271c7f05a6b13e8e admin
-      //  com.mr.bomkpi.entity.User u = userService.findByUsername(username);
-        String password = passwordEncoder.encode("123456");
-        logger.info("登录用户名-----" + username + ",数据库密码----" + password + "，数据库权限----" + AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
-        return new User(username, password, AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
+        com.mr.bomkpi.entity.User u = userService.findByUsername(username);
+       // String password = passwordEncoder.encode("123456");
+       // logger.info("登录用户名-----" + username + ",数据库密码----" + password + "，数据库权限----" + AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
+        return new User(username, u.getPassword(), AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
     }
 
 
