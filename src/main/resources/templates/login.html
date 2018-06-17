@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
-    <title>BOM&KPI </title>
+    <title>BOMKPI </title>
     <div th:replace="head"></div>
     <div th:remove="all">
         <meta charset="utf-8"/>
@@ -52,7 +52,7 @@
     <div class="login-box-body">
         <p class="login-box-msg"></p>
 
-        <form action="/login" method="post">
+        <form action="/user/login" method="post">
             <div class="form-group has-feedback">
                 <input type="text" class="form-control" placeholder="username" name="username" required="required"/>
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>

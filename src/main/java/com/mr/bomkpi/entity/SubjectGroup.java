@@ -35,9 +35,6 @@ public class SubjectGroup implements Serializable {
 
     private Integer   status;
 
-    @ManyToMany(cascade = {},fetch = FetchType.EAGER)
-    @JoinTable(name = "bom_subject_group_menus",joinColumns = {@JoinColumn(name = "subject_goup_id")},inverseJoinColumns = {@JoinColumn(name = "menu_id")})
-    private List<Menu> menus;
 
     public SubjectGroup() {
     }
@@ -106,11 +103,5 @@ public class SubjectGroup implements Serializable {
         this.status = status;
     }
 
-    public List<Menu> getMenus() {
-        return menus;
-    }
 
-    public void setMenus(List<Menu> menus) {
-        this.menus = menus;
-    }
 }
