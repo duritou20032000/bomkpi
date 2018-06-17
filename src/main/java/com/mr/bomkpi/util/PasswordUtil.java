@@ -46,11 +46,11 @@ public class PasswordUtil implements PasswordEncoder{
 
     @Override
     public String encode(CharSequence rawPassword) {
-        return encryptPasswd(String.valueOf(rawPassword));
+        return encryptPasswd(rawPassword.toString());
     }
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
         logger.info("raw ===================="+String.valueOf(rawPassword)+"encodePassword+++++++++++"+encodedPassword);
-        return validatePasswd(String.valueOf(rawPassword),encodedPassword);
+        return validatePasswd(rawPassword.toString(),encodedPassword);
     }
 }
