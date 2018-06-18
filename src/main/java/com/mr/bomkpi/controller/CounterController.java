@@ -24,6 +24,10 @@ public class CounterController {
         model.addAttribute("counters",counters);
         return "/counter/list";
     }
+    @GetMapping("/counter/form")
+    public String addCounter(Model model,String counterId){
 
+        return "/counter/form";
+    }
 
 }
