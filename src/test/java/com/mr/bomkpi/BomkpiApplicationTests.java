@@ -1,18 +1,17 @@
 package com.mr.bomkpi;
 
+import com.mr.bomkpi.entity.Policy;
 import com.mr.bomkpi.entity.SubjectGroup;
 import com.mr.bomkpi.entity.User;
+import com.mr.bomkpi.service.PolicyService;
 import com.mr.bomkpi.service.UserService;
-import com.mr.bomkpi.util.DateUtil;
 import com.mr.bomkpi.util.PasswordUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +22,8 @@ public class BomkpiApplicationTests {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private PolicyService policyService;
 
 	/**
 	 * 密码加密
@@ -48,6 +49,9 @@ public class BomkpiApplicationTests {
 		List<SubjectGroup> lists = user.getSubject().getSubjectGroups();
 		for (SubjectGroup s : lists) {
 			String name = s.getSubjectGroupName();
+			System.out.println("[admin==="+sbn+"===="+name+"]");
 		}
+
+		//得到相应的policy_id 来resource_id
 	}
 }
