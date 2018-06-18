@@ -1,5 +1,6 @@
 package com.mr.bomkpi.entity;
 
+import com.sun.prism.shader.AlphaTextureDifference_RadialGradient_Loader;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -12,28 +13,32 @@ import java.util.List;
 public class SubjectGroup implements Serializable {
     @Id
     @Column(name = "SUBJECT_GROUP_ID")
-    private String   subjectGroupId;
+    private String subjectGroupId;
 
     @Column(name = "SUBJECT_GROUP_NAME")
-    private String   subjectGroupName;
+    private String subjectGroupName;
 
     @Column(name = "SUBJECT_GROUP_DESC")
-    private String   subjectGroupDesc;
+    private String subjectGroupDesc;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "CREATION_DATE")
-    private Date   creationDate;
+    private Date creationDate;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "LAST_MODIFY_DATE")
-    private Date    lastModifyDate;
+    private Date lastModifyDate;
 
-    private String   creator;
+    private String creator;
+//
+//    @ManyToMany(cascade = {},fetch =  FetchType.EAGER)
+//    @JoinTable(name = "bm_policy_subject_group", joinColumns = {@JoinColumn(name = "SUBJECT_GROUP_ID")}, inverseJoinColumns = {@JoinColumn(name = "POLICY_ID")})
+//    private List<Policy> policys;
 
     @Column(name = "modified_by")
-    private String   modifiedBy;
+    private String modifiedBy;
 
-    private Integer   status;
+    private Integer status;
 
 
     public SubjectGroup() {
@@ -102,6 +107,5 @@ public class SubjectGroup implements Serializable {
     public void setStatus(Integer status) {
         this.status = status;
     }
-
 
 }

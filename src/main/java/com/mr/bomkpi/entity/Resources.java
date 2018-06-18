@@ -3,12 +3,15 @@ package com.mr.bomkpi.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 
+/**
+ * 只是在没整合前测试用
+ */
 @Entity
 @Table(name = "bom_resource")
 public class Resources implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "resource_id")
+    private String id;
 
     @Column(name = "name")
     private String name;
@@ -26,11 +29,11 @@ public class Resources implements Serializable {
     public Resources() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

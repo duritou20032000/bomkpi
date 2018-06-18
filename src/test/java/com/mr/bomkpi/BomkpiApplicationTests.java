@@ -23,6 +23,10 @@ public class BomkpiApplicationTests {
 
 	@Autowired
 	private UserService userService;
+
+	/**
+	 * 密码加密
+	 */
 	@Test
 	public void contextLoads() {
 		User user = userService.findByUsername("admin");
@@ -33,5 +37,17 @@ public class BomkpiApplicationTests {
 		user.setLastChangePwdTime(new Date(System.currentTimeMillis()));
 		userService.save(user);
 	}
+	/**
+	 * 授权，资源测试
+	 */
 
+    @Test
+	public void resource(){
+		User user = userService.findByUsername("admin");
+		String sbn = user.getSubject().getSubjectName();
+		List<SubjectGroup> lists = user.getSubject().getSubjectGroups();
+		for (SubjectGroup s : lists) {
+			String name = s.getSubjectGroupName();
+		}
+	}
 }

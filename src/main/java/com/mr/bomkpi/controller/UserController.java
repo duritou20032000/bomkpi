@@ -1,9 +1,12 @@
 package com.mr.bomkpi.controller;
 
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.List;
 
 @Controller
 public class UserController {
@@ -34,13 +37,20 @@ public class UserController {
     }
 
     @PostMapping("/user/login")
-    public String login() {
+    public String login(String username) {
+        System.out.println(".......>>>>>>>>"+username);
         return "welcome";
     }
 
     @GetMapping("/user/logout")
     public String logout() {
         return "login";
+    }
+
+    @GetMapping("/user/profile")
+    public List<User> profile(){
+        //当前登录的用户
+        return null;
     }
 
 }

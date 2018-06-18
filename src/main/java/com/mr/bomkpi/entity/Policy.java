@@ -1,11 +1,9 @@
 package com.mr.bomkpi.entity;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -53,6 +51,7 @@ public class Policy implements Serializable {
 
     @Column(name = "status")
     private Integer status;
+
 
     public Policy() {
     }
@@ -136,4 +135,5 @@ public class Policy implements Serializable {
     public void setStatus(Integer status) {
         this.status = status;
     }
+
 }

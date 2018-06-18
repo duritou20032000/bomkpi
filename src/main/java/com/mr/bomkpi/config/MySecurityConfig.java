@@ -47,8 +47,9 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
-                .formLogin()
-//                .formLogin().loginPage("/login").usernameParameter("username").passwordParameter("password").loginProcessingUrl("/user/login").permitAll()
+//                主要是在开始测试使用
+//                .formLogin()
+                .formLogin().loginPage("/login").usernameParameter("username").passwordParameter("password").loginProcessingUrl("/user/login").permitAll()
                 .and()
                 .logout().logoutUrl("/user/logout").permitAll()
                 .and()
@@ -63,6 +64,7 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(myUserDetailService).passwordEncoder(new PasswordUtil());
 
     }
+
 
 
 
