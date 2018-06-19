@@ -1,25 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
+    <meta charset="UTF-8">
     <title>Admin Dashbord</title>
     <div th:replace="head"></div>
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini ">
-<!--<h1 align="center">欢迎光临</h1>-->
-<!--<div sec:authorize="!isAuthenticated()">-->
-    <!--&lt;!&ndash;默认登录页&ndash;&gt;-->
-    <!--&lt;!&ndash;<h2 align="center">游客你好，如果进出<a th:href="@{/login}">请先登录</a></h2>&ndash;&gt;-->
-    <!--&lt;!&ndash;自动以登录页&ndash;&gt;-->
-    <!--<h2 align="center">游客你好，如果进出<a th:href="@{/userLogin}">请先登录</a></h2>-->
-<!--</div>-->
-<!--<div sec:authorize="isAuthenticated()">-->
-    <!--<h2 align="right"><span sec:authentication="name"></span>你好，您的角色有：<span sec:authentication="principal.authorities"></span></h2>-->
-    <!--<form th:action="@{/logout}" method="post">-->
-        <!--<input type="submit" value="注销"/>-->
-    <!--</form>-->
-<!--</div>-->
 <div class="wrapper">
 
     <!-- Left side column. contains the logo and sidebar -->

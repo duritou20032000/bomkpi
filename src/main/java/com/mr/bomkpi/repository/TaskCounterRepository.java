@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface TaskCounterRepository extends JpaRepository<TaskCounter,Long> {
 
     boolean existsByCounterCodeAndWhseCode(String counterCode, String whseCode);
+    TaskCounter readByCounterCodeAndWhseCode(String counterCode, String whseCode);
+
 }
