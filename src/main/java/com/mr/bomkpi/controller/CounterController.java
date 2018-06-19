@@ -100,8 +100,6 @@ public class CounterController {
     @ResponseBody
     public List<Whse> getWhseCode() {
         List<Whse>  list = whseRepository.findAll();
-        //加一个控制在初始位置
-        list.add(0,new Whse());
         return list;
     }
     /**
@@ -119,15 +117,15 @@ public class CounterController {
     /**
      * 根据仓库搜索
      */
-    @GetMapping("/counter/search")
+    @PostMapping("/counter/search")
     public String  search(Model model,String whseCode){
         List<TaskCounter> counters = counterService.findAllByWhseCode(whseCode);
         model.addAttribute("counters", counters);
+        model.addAttribute("whseCode", whseCode);
         return "/counter/list";
     }
     @GetMapping("/counter/clear")
     public String  clear(Model model){
-
         return "redirect:/counter/getCounters";
     }
 

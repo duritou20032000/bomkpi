@@ -21,8 +21,14 @@ function getWhseCode(){
            // alert("test for getWhseCode"+data);
             var str = "";
             var list = eval(data);
+            list.unshift('');
             for(var i=0;i<list.length;i++){
-                str +=" <option value='"+list[i].whseCode+"' >"+list[i].whseCode+"</option> ";
+                if(i==0){
+                    str = " <option value='' selected='true'></option> ";
+                }else{
+
+                    str +=" <option value='"+list[i].whseCode+"' >"+list[i].whseCode+"</option> ";
+                }
             }
             $("#whseCode").html(str);
         }
@@ -31,18 +37,25 @@ function getWhseCode(){
 }
 function getWhseName(){
     var val = $("#whseCode").val();
-    $.ajax({
-        async:false,
-        url:"/counter/getWhseNameByCode/"+val,
-        dataType:"TEXT",
-        data:{},
-        type:"POST",
-        success:function(data){
-            // alert("test for getWhseCode"+data);
-            var str = " <option value='"+data+"' >"+data+"</option> ";
-            $("#whseName").html(str);
-        }
+    if(val == null || val == ''){
+        var str = " <option value='' selected='true'></option> ";
+        $("#whseName").html(str);
+    }else{
+        $.ajax({
+            async:false,
+            url:"/counter/getWhseNameByCode/"+val,
+            dataType:"TEXT",
+            data:{},
+            type:"POST",
+            success:function(data){
+                // alert("test for getWhseCode"+data);
+                var str = " <option value='"+data+"' >"+data+"</option> ";
+                $("#whseName").html(str);
+            }
 
-    });
+        });
+    }
 }
+
+
 

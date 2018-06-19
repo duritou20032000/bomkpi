@@ -21,24 +21,24 @@
         <section class="content">
             <div class="row">
                 <div class="col-xs-12">
-                    <div>
+                    <form th:action="@{/counter/search}" method="post" th:object="${whse}">
                         <div style="display:inline;">
                             <label for="whseCode">仓库编码</label>
                             <select style="width: 30%;height: 34px;font-size: 14px; line-height: 1.42857143;color: #555555;background-color: #fff;"
                                     data-live-search="true"  name="whseCode" id="whseCode" placeholder="所属仓库编码"  maxlength="60">
                             </select>
                         </div>
-                        <div style="display:inline;height: 34px;width: 300px;">
+                        <div style="display:inline;height: 34px;width: 300px;" readonly="true" >
                             <label for="whseCode">仓库名称</label>
                             <select style="width: 30%;height: 34px;font-size: 14px; line-height: 1.42857143;color: #555555;background-color: #fff;"
-                                    data-live-search="true" name="whseName" id="whseName"      placeholder="所属仓库名称">
+                                    data-live-search="true" name="whseName" id="whseName"   placeholder="所属仓库名称">
                             </select>
                         </div>
                         <div style="display:inline;height: 34px;width: 30px;margin-left: 3px;">
                             <button><a th:href="@{/counter/clear}" title="清空"><span><i class="glyphicon glyphicon-remove"></i></span></a></button>
-                            <button><a th:href="@{/counter/search}" title="查询"><span><i class="glyphicon glyphicon-search"></i></span></a></button>
+                            <button type="submit"><span><i class="glyphicon glyphicon-search"></i></span></button>
                         </div>
-                    </div>
+                    </form>
                     <div class="box">
                         <div class="box-header">
                                 <a th:href="@{/counter/form}" title="新增柜台"><span class="glyphicon glyphicon-plus"></span></a>
