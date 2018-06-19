@@ -24,6 +24,10 @@ public class CounterService {
         List<TaskCounter> counters = taskCounterRepository.findAll();
         return counters;
     }
+    public List<TaskCounter> findAllByWhseCode(String whseCode){
+        List<TaskCounter> counters = taskCounterRepository.findAllByWhseCode(whseCode);
+        return counters;
+    }
 
     public void save(TaskCounter counter) {
         taskCounterRepository.save(counter);

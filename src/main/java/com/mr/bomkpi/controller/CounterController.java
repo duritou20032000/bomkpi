@@ -4,6 +4,7 @@ import com.mr.bomkpi.entity.TaskCounter;
 import com.mr.bomkpi.entity.Whse;
 import com.mr.bomkpi.repository.WhseRepository;
 import com.mr.bomkpi.service.CounterService;
+import com.mr.bomkpi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -98,7 +99,10 @@ public class CounterController {
     @PostMapping("/counter/getWhseCode")
     @ResponseBody
     public List<Whse> getWhseCode() {
-        return whseRepository.findAll();
+        List<Whse>  list = whseRepository.findAll();
+        //加一个控制在初始位置
+        list.add(0,new Whse());
+        return list;
     }
     /**
      * 联动仓库编码和名称
@@ -108,8 +112,23 @@ public class CounterController {
     @PostMapping("/counter/getWhseNameByCode/{val}")
     @ResponseBody
     public String getWhseNameByCode(@PathVariable("val") String code) {
+
         Whse whse = whseRepository.findByWhseCode(code);
         return whse.getWhseName();
+    }
+    /**
+     * 根据仓库搜索
+     */
+    @GetMapping("/counter/search")
+    public String  search(Model model,String whseCode){
+        List<TaskCounter> counters = counterService.findAllByWhseCode(whseCode);
+        model.addAttribute("counters", counters);
+        return "/counter/list";
+    }
+    @GetMapping("/counter/clear")
+    public String  clear(Model model){
+
+        return "redirect:/counter/getCounters";
     }
 
 }

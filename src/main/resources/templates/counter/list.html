@@ -21,11 +21,29 @@
         <section class="content">
             <div class="row">
                 <div class="col-xs-12">
-
+                    <div>
+                        <div style="display:inline;">
+                            <label for="whseCode">仓库编码</label>
+                            <select style="width: 30%;height: 34px;font-size: 14px; line-height: 1.42857143;color: #555555;background-color: #fff;"
+                                    data-live-search="true"  name="whseCode" id="whseCode" placeholder="所属仓库编码"  maxlength="60">
+                            </select>
+                        </div>
+                        <div style="display:inline;height: 34px;width: 300px;">
+                            <label for="whseCode">仓库名称</label>
+                            <select style="width: 30%;height: 34px;font-size: 14px; line-height: 1.42857143;color: #555555;background-color: #fff;"
+                                    data-live-search="true" name="whseName" id="whseName"      placeholder="所属仓库名称">
+                            </select>
+                        </div>
+                        <div style="display:inline;height: 34px;width: 30px;margin-left: 3px;">
+                            <button><a th:href="@{/counter/clear}" title="清空"><span><i class="glyphicon glyphicon-remove"></i></span></a></button>
+                            <button><a th:href="@{/counter/search}" title="查询"><span><i class="glyphicon glyphicon-search"></i></span></a></button>
+                        </div>
+                    </div>
                     <div class="box">
                         <div class="box-header">
-                            <a th:href="@{/counter/form}" title="新增柜台"><span class="glyphicon glyphicon-plus"></span></a>
+                                <a th:href="@{/counter/form}" title="新增柜台"><span class="glyphicon glyphicon-plus"></span></a>
                         </div>
+
 
                         <div class="box-body">
                             <table id="dataTable" class="table table-bordered table-striped">
@@ -37,6 +55,10 @@
                                     <th>仓库编码</th>
                                     <th>仓库名称</th>
                                     <th>柜台状态</th>
+                                    <th>创建人</th>
+                                    <th>创建时间</th>
+                                    <th>最后修改人</th>
+                                    <th>最后修改时间</th>
                                     <th>说明</th>
                                     <th>修改</th>
                                 </tr>
@@ -50,6 +72,10 @@
                                     <td th:text="${counter.whseCode}">code</td>
                                     <td th:text="${counter.whseName}">name</td>
                                     <td th:text="${counter.CounterStatus}==1?'空闲':'使用中'" id="status">status</td>
+                                    <td th:text="${counter.creater}">creater</td>
+                                    <td th:text="${#dates.format(counter.creationDate,'yyyy-MM-dd HH:mm:ss')}">createdate</td>
+                                    <td th:text="${counter.lastModifyName}">modify</td>
+                                    <td th:text="${#dates.format(counter.lastModifyDate,'yyyy-MM-dd HH:mm:ss')}">modifydate</td>
                                     <td th:text="${counter.description}">name</td>
                                     <td style="text-align: center">
                                         <a th:href="@{/counter/form(id=${counter.id})}"><span class="glyphicon glyphicon-edit" title="编辑"></span></a>
@@ -71,24 +97,11 @@
     </div>
     <!-- /.content-wrapper -->
 
-
+    <div th:replace="footer"></div>
 </div>
 
 <div th:replace="script"></div>
-
-<!-- page script -->
-<script>
-    $(function () {
-        $('#dataTable').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false
-        });
-    });
-</script>
 <script th:src="@{/js/list-page.js}"></script>
+<script th:src="@{/js/counter.js}"></script>
 </body>
 </html>
