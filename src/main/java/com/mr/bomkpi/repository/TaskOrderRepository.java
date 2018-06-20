@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
  * @author Administrator
  */
 @Repository
-public interface TaskOrderRepository extends JpaRepository<TaskOrder,String> {
+public interface TaskOrderRepository extends JpaRepository<TaskOrder,Long> {
 
 }

@@ -32,14 +32,14 @@ public class TaskOrder implements Serializable{
      * 加工单编码
      *
      */
-    @Column(name ="worksheet_code")
-    private String  worksheetCode;
+    @Column(name ="work_order_code")
+    private String  orderCode;
     /**
      * 加工单类型
      *1 组装 2 拆零
      */
-    @Column(name ="worksheet_type")
-    private String  worksheetType;
+    @Column(name ="work_order_type")
+    private String  orderType;
     /**
      * 最后期限
      *
@@ -80,14 +80,7 @@ public class TaskOrder implements Serializable{
     @Column(name ="product_unit")
     private String  productUnit;
 
-    /**
-     * 关单人编码
-     */
-    @Column(name ="closer_code")
-    private String  closerCode;
 
-    @Column(name ="closer_name")
-    private String  closerName;
     /**
      *
      * 加工任务完成时间
@@ -103,6 +96,24 @@ public class TaskOrder implements Serializable{
      */
     @Column(name ="plugin_status")
     private Integer pluginStatus  ;
+
+    /**
+     * 关单人编码
+     */
+    @Column(name ="closer_code")
+    private String  closerCode;
+    /**
+     *  关单人名称
+     */
+    @Column(name ="closer_name")
+    private String  closerName;
+
+    /**
+     * 关单时间
+     */
+    @Column(name ="close_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date closeDate;
 
     public TaskOrder() {
     }
@@ -131,20 +142,20 @@ public class TaskOrder implements Serializable{
         this.whseName = whseName;
     }
 
-    public String getWorksheetCode() {
-        return worksheetCode;
+    public String getOrderCode() {
+        return orderCode;
     }
 
-    public void setWorksheetCode(String worksheetCode) {
-        this.worksheetCode = worksheetCode;
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
     }
 
-    public String getWorksheetType() {
-        return worksheetType;
+    public String getOrderType() {
+        return orderType;
     }
 
-    public void setWorksheetType(String worksheetType) {
-        this.worksheetType = worksheetType;
+    public void setOrderType(String orderType) {
+        this.orderType = orderType;
     }
 
     public Date getDeadline() {
@@ -225,5 +236,13 @@ public class TaskOrder implements Serializable{
 
     public void setPluginStatus(Integer pluginStatus) {
         this.pluginStatus = pluginStatus;
+    }
+
+    public Date getCloseDate() {
+        return closeDate;
+    }
+
+    public void setCloseDate(Date closeDate) {
+        this.closeDate = closeDate;
     }
 }
