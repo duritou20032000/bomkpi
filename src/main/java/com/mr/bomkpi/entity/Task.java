@@ -5,7 +5,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
  * 加工子任务
@@ -89,9 +88,13 @@ public class Task implements Serializable {
     /**
      * 柜台编码
      */
-    @ManyToMany(cascade = {},fetch = FetchType.LAZY)
-    @JoinColumn(name = "counter_code")
-    private List<TaskCounter> taskCounters;
+    @Column(name = "counter_code")
+    private  String counterCode;
+    /**
+     * 柜台名称
+     */
+    @Column(name = "counter_name")
+    private  String counterName;
 
     /**
      * 加工单
@@ -207,12 +210,20 @@ public class Task implements Serializable {
         this.taskStatus = taskStatus;
     }
 
-    public List<TaskCounter> getTaskCounters() {
-        return taskCounters;
+    public String getCounterCode() {
+        return counterCode;
     }
 
-    public void setTaskCounters(List<TaskCounter> taskCounters) {
-        this.taskCounters = taskCounters;
+    public void setCounterCode(String counterCode) {
+        this.counterCode = counterCode;
+    }
+
+    public String getCounterName() {
+        return counterName;
+    }
+
+    public void setCounterName(String counterName) {
+        this.counterName = counterName;
     }
 
     public TaskOrder getTaskOrder() {

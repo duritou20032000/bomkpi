@@ -91,8 +91,8 @@ public class TaskOrder implements Serializable{
     private Date finishDate;
 
     /**
-     * 加工任务状态
-     * 1 未分配  2 已分配  3 已完成
+     * 订单状态
+     * 1 未分配  2 分配中 3已分配  4 已完成
      */
     @Column(name ="plugin_status")
     private Integer pluginStatus  ;

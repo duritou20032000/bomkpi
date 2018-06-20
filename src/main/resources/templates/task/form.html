@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>任务管理</title>
+    <meta charset="UTF-8">
+    <title>柜台管理</title>
     <div th:replace="head"></div>
 </head>
 
@@ -22,81 +23,99 @@
                     <!-- Horizontal Form -->
                     <div class="box box-info">
                         <div class="box-header with-border">
-                            <h3 class="box-title">任务管理</h3>
+                            <h3 class="box-title">订单拆分</h3>
                         </div>
                         <!-- /.box-header -->
                         <!-- form start -->
-                        <form class="form-horizontal" action="#" th:action="@{/counter/save}" th:object="${counter}" method="post">
+                        <form class="form-horizontal" action="#" th:action="@{/task/init}" th:object="${task}" method="post" accept-charset="UTF-8" onsubmit="document.characterSet='UTF-8'">
                             <div class="box-body" >
                                 <div class="form-group" hidden="true">
-                                    <label for="inputEmail3" class="col-sm-2 control-label">ID</label>
+                                    <label for="id" class="col-sm-2 control-label" >ID</label>
 
                                     <div class="col-sm-10">
-                                        <input type="text" name="id" th:value="${counter}? ${counter.id}"
-                                               class="form-control" id="inputEmail3" placeholder="Id" required="required" maxlength="30"/>
+                                        <input type="text" name="id" th:value="${task}? ${task.id}"
+                                               class="form-control" id="id" placeholder="Id"  maxlength="30"/>
                                     </div>
                                 </div>
-                            <div class="box-body">
                                 <div class="form-group">
-                                    <label for="inputEmail3" class="col-sm-2 control-label">柜台编码</label>
+                                    <label for="taskOrder.orderCode" class="col-sm-2 control-label">订单编码</label>
 
                                     <div class="col-sm-10">
-                                        <input type="text" name="counterCode" th:value="${counter}? ${counter.counterCode}"
-                                               class="form-control" id="inputEmail3" placeholder="请填写柜台编码" required="required" maxlength="30"/>
+                                        <input type="text" name="taskOrder.orderCode" th:value="${order}? ${order.orderCode}"
+                                               class="form-control" id="taskOrder.orderCode" placeholder="订单编码"  maxlength="30" readonly/>
                                     </div>
                                 </div>
-
                                 <div class="form-group">
-                                    <label for="inputEmail3" class="col-sm-2 control-label">柜台名称</label>
+                                    <label for="taskOrder.whseCode" class="col-sm-2 control-label">仓库编码</label>
 
                                     <div class="col-sm-10">
-                                        <input type="text" name="counterName" th:value="${counter}? ${counter.counterName}"
-                                               class="form-control" id="inputEmail3" placeholder="请填写柜台名称"
-                                               maxlength="100"/>
+                                        <input type="text" name="taskOrder.whseCode" th:value="${order}? ${order.whseCode}"
+                                               class="form-control" id="taskOrder.whseCode" placeholder="仓库编码"  maxlength="30" readonly/>
                                     </div>
                                 </div>
-
                                 <div class="form-group">
-                                    <label for="inputEmail3" class="col-sm-2 control-label">仓库编码</label>
+                                    <label for="taskOrder.whseName" class="col-sm-2 control-label">仓库名称</label>
 
                                     <div class="col-sm-10">
-                                        <input type="text" name="WhseCode" th:value="${counter}? ${counter.WhseCode}"
-                                               class="form-control" id="inputEmail3" placeholder="所属仓库编码"
-                                               required="required" maxlength="30"/>
+                                        <input type="text" name="taskOrder.whseName" th:value="${order}? ${order.whseName}"
+                                               class="form-control" id="taskOrder.whseName" placeholder="仓库名称"  maxlength="30" readonly/>
                                     </div>
                                 </div>
-
                                 <div class="form-group">
-                                    <label for="inputEmail3" class="col-sm-2 control-label">仓库名称</label>
+                                    <label for="taskOrder.productCount" class="col-sm-2 control-label"> 订单预期数量</label>
 
                                     <div class="col-sm-10">
-                                        <input type="text" name="WhseName" th:value="${counter}? ${counter.WhseName}"
-                                               class="form-control" id="inputEmail3" placeholder="所属仓库名称"/>
+                                        <input type="text" name="taskOrder.productCount" th:value="${order}? ${order.productCount}"
+                                               class="form-control" id="taskOrder.productCount" placeholder="订单预期数量"  maxlength="30" readonly/>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="inputEmail3" class="col-sm-2 control-label">柜台状态</label>
+                                    <label for="pluginStatus" class="col-sm-2 control-label">订单状态</label>
 
                                     <div class="col-sm-10">
-                                        <select  name="counterStatus" class="form-control" id="inputEmail3">
-                                            <option value="1">空闲</option>
-                                            <option value="2">使用中</option>
+                                        <select  name="pluginStatus" class="form-control" id="pluginStatus" disabled="true">
+                                            <option value="1">未分配</option>
+                                            <option value="2">分配中</option>
+                                            <option value="3">已分配</option>
+                                            <option value="4">已完成</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="inputEmail3" class="col-sm-2 control-label">说明</label>
-
-                                    <div class="col-sm-10">
-                                        <input type="text" name="description" th:value="${counter}? ${counter.description}"
-                                               class="form-control" id="inputEmail3" placeholder="说明"/>
+                                    <label class="col-sm-2 control-label">分配任务</label>
+                                    <div th:if="${counters}==null">
+                                        <p style="color: red" th:text="${msg}">错误</p>
                                     </div>
+                                    <div th:unless="${counters}==null" class="col-sm-10">
+                                        <table class="table table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th>序号</th>
+                                                <th>柜台编码</th>
+                                                <th>柜台名称</th>
+                                                <th>柜台状态</th>
+                                                <th>柜台任务数量</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr  th:each="counter:${counters}">
+                                                    <td th:text="${counterStat.count}">1</td>
+                                                    <td th:text="${counter.getCounterCode()}"></td>
+                                                    <td th:text="${counter.getCounterName()}"></td>
+                                                    <td th:text="${counter.getCounterStatus()}==1?'空闲':'使用中'" id="status">status</td>
+                                                    <td><input type="text" name="productCount" placeholder="子任务产成品目标数量" /></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
                                 </div>
 
                                 <br/><br/>
                             <!--</div>-->
                             <!-- /.box-body -->
+                            </div>
                             <div class="box-footer" style="text-align: center;">
 
                                 <button type="submit" class="btn btn-info">保存</button>
@@ -119,6 +138,6 @@
 </div>
 <!-- ./wrapper -->
 <div th:replace="script"></div>
-
+<script th:src="@{/js/counter.js}"></script>
 </body>
 </html>
