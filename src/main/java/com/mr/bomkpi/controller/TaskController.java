@@ -2,7 +2,9 @@ package com.mr.bomkpi.controller;
 
 import com.mr.bomkpi.entity.Task;
 import com.mr.bomkpi.entity.TaskCounter;
+import com.mr.bomkpi.entity.TaskOrder;
 import com.mr.bomkpi.repository.TaskCounterRepository;
+import com.mr.bomkpi.repository.TaskOrderRepository;
 import com.mr.bomkpi.repository.TaskRepository;
 import com.mr.bomkpi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -21,6 +25,8 @@ public class TaskController {
     private TaskRepository taskRepository;
     @Autowired
     private TaskCounterRepository counterRepository;
+    @Autowired
+    private TaskOrderRepository orderRepository;
 
 
     @GetMapping("/task/getTasks")
@@ -29,26 +35,38 @@ public class TaskController {
     }
 
     @PostMapping("/task/init")
-    public String init(Model model,Task task){
+    public String init(Task task,Principal principal){
       //按照多个柜台来生成子任务
-        List<TaskCounter> list=null;
-       String whseCode =  task.getTaskOrder().getWhseCode();
+        List<TaskCounter> counters=null;
+        TaskOrder order = orderRepository.findByOrderCode(task.getOrderCode());
+        String whseCode =  order.getWhseCode();
+        String amount = task.getProductCount();
+        String[] ns = null;
+        if(!StringUtil.isEmptyOrNull(amount)){
+            ns = amount.split(",");
+        }
        if(!StringUtil.isEmptyOrNull(whseCode)){
-           list = counterRepository.findAllByWhseCode(whseCode);
+           counters = counterRepository.findAllByWhseCode(whseCode);
        }
-
-
-
-        System.out.println("test");
-//        taskRepository.save(task);
-        return "order/form";
+        for (int i = 0; i < counters.size(); i++) {
+            String code = counters.get(i).getCounterCode();
+            String name = counters.get(i).getCounterName();
+            String mount = ns[i];
+            String taskCode = whseCode+"-"+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+"-"+i;
+            String createrCode = principal.getName();
+            String productCount=ns[i];
+            task.setCounterCode(code);
+            task.setCounterName(name);
+            task.setCreaterCode(createrCode);
+            task.setProductCount(productCount);
+            task.setTaskCode(taskCode);
+            task.setCreationDate(new Date());
+            task.setProductName(order.getProductName());
+            task.setProductCode(order.getProductCode());
+            task.setTaskStatus(1);
+            taskRepository.saveAndFlush(task);
+        }
+        return "redirect:/task/getTasks";
     }
 
-//    子任务编码生成规则
-    protected  String  generateTasks(Task task, Principal principal){
-//        仓库加时间戳
-
-
-        return null;
-    }
 }

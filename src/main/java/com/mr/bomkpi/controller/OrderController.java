@@ -34,7 +34,6 @@ public class OrderController {
     public String form(Model model, Long id) {
         TaskOrder order = orderRepository.getOne(id);
         //获取本仓库的柜台为分配任务做准备
-
         String whseCode = order.getWhseCode();
         List<TaskCounter> counters = counterRepository.findAllByWhseCode(whseCode);
         if(counters.size()==0){

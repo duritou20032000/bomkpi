@@ -119,6 +119,9 @@ public class CounterController {
      */
     @PostMapping("/counter/search")
     public String  search(Model model,String whseCode){
+        if(StringUtil.isEmptyOrNull(whseCode)){
+            return "redirect:/counter/getCounters";
+        }
         List<TaskCounter> counters = counterService.findAllByWhseCode(whseCode);
         model.addAttribute("counters", counters);
         model.addAttribute("whseCode", whseCode);

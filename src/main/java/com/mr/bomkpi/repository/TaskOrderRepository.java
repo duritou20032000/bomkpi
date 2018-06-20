@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TaskOrderRepository extends JpaRepository<TaskOrder,Long> {
-
+    TaskOrder findByOrderCode(String orderCode);
 }

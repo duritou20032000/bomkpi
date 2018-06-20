@@ -25,9 +25,8 @@ public class Task implements Serializable {
     /**
      * 子任务创建人
      */
-    @ManyToOne(cascade = {},fetch = FetchType.LAZY)
-    @JoinColumn(name = "create_user_code")
-    private User createrCode;
+    @Column(name = "create_user_code")
+    private String createrCode;
 
     /**
      * 子任务创建时间
@@ -99,9 +98,8 @@ public class Task implements Serializable {
     /**
      * 加工单
      */
-    @ManyToOne(cascade = {},fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_order_code")
-    private TaskOrder taskOrder;
+    @Column(name = "task_order_code")
+    private String orderCode;
 
     public Task() {
     }
@@ -130,20 +128,22 @@ public class Task implements Serializable {
         this.taskCode = taskCode;
     }
 
-    public User getCreaterCode() {
-        return createrCode;
-    }
     public String getDescription() {
         return description;
+    }
+
+    public String getCreaterCode() {
+        return createrCode;
+    }
+
+    public void setCreaterCode(String createrCode) {
+        this.createrCode = createrCode;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public void setCreaterCode(User createrCode) {
-        this.createrCode = createrCode;
-    }
 
     public Date getCreationDate() {
         return creationDate;
@@ -226,11 +226,11 @@ public class Task implements Serializable {
         this.counterName = counterName;
     }
 
-    public TaskOrder getTaskOrder() {
-        return taskOrder;
+    public String getOrderCode() {
+        return orderCode;
     }
 
-    public void setTaskOrder(TaskOrder taskOrder) {
-        this.taskOrder = taskOrder;
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
     }
 }
