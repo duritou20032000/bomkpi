@@ -1,6 +1,5 @@
 package com.mr.bomkpi;
 
-import com.mr.bomkpi.entity.Policy;
 import com.mr.bomkpi.entity.SubjectGroup;
 import com.mr.bomkpi.entity.User;
 import com.mr.bomkpi.service.PolicyService;
@@ -53,5 +52,19 @@ public class BomkpiApplicationTests {
 		}
 
 		//得到相应的policy_id 来resource_id
+	}
+
+	// 判断是否已经将订单数量分配完
+	@Test
+	public void  isAllocationOver(){
+    	String[] str =new String[]{"1","2","3","4"};
+		boolean flag =false;
+		Double d = 0.0d;
+		Double t =0.0d;
+		for (String s : str) {
+			t = Double.valueOf((s));
+			d=d+t;
+		}
+		System.out.println(d);
 	}
 }
