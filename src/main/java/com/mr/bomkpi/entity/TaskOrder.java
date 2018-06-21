@@ -80,7 +80,6 @@ public class TaskOrder implements Serializable{
     @Column(name ="product_unit")
     private String  productUnit;
 
-
     /**
      *
      * 加工任务完成时间
@@ -89,6 +88,17 @@ public class TaskOrder implements Serializable{
     @Column(name ="finish_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date finishDate;
+    /**
+     * 第几次分配, 分配次数
+     *
+     */
+    private int frequency;
+    /**
+     * 最后一次的分配方案
+     *
+     */
+    @Column(name ="last_allocation_plan")
+    private String lastAllocationPlan;
 
     /**
      * 订单状态
@@ -244,5 +254,21 @@ public class TaskOrder implements Serializable{
 
     public void setCloseDate(Date closeDate) {
         this.closeDate = closeDate;
+    }
+
+    public int getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(int frequency) {
+        this.frequency = frequency;
+    }
+
+    public String getLastAllocationPlan() {
+        return lastAllocationPlan;
+    }
+
+    public void setLastAllocationPlan(String lastAllocationPlan) {
+        this.lastAllocationPlan = lastAllocationPlan;
     }
 }

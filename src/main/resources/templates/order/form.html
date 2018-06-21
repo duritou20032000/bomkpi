@@ -27,52 +27,46 @@
                         </div>
                         <!-- /.box-header -->
                         <!-- form start -->
-                        <form class="form-horizontal" action="#" th:action="@{/task/init}" th:object="${task}" method="post" accept-charset="UTF-8" onsubmit="document.characterSet='UTF-8'">
+                        <form class="form-horizontal" action="#" th:action="@{/order/generateTask}" th:object="${order}" method="post" accept-charset="UTF-8" onsubmit="document.characterSet='UTF-8'">
                             <div class="box-body" >
                                 <div class="form-group" hidden="true">
                                     <label for="id" class="col-sm-2 control-label" >ID</label>
-
                                     <div class="col-sm-10">
-                                        <input type="text" name="id" th:value="${task}? ${task.id}"
+                                        <input type="text" name="id" th:value="${order}? ${order.id}"
                                                class="form-control" id="id" placeholder="Id"  maxlength="30"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="orderCode" class="col-sm-2 control-label">订单编码</label>
-
                                     <div class="col-sm-10">
                                         <input type="text" name="orderCode" th:value="${order}? ${order.orderCode}"
                                                class="form-control" id="orderCode" placeholder="订单编码"  maxlength="30" readonly/>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="taskOrder.whseCode" class="col-sm-2 control-label">仓库编码</label>
-
+                                    <label for="whseCode" class="col-sm-2 control-label">仓库编码</label>
                                     <div class="col-sm-10">
-                                        <input type="text" name="taskOrder.whseCode" th:value="${order}? ${order.whseCode}"
-                                               class="form-control" id="taskOrder.whseCode" placeholder="仓库编码"  maxlength="30" readonly/>
+                                        <input type="text" name="whseCode" th:value="${order}? ${order.whseCode}"
+                                               class="form-control" id="whseCode" placeholder="仓库编码"  maxlength="30" readonly/>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="taskOrder.whseName" class="col-sm-2 control-label">仓库名称</label>
-
+                                    <label for="whseName" class="col-sm-2 control-label">仓库名称</label>
                                     <div class="col-sm-10">
-                                        <input type="text" name="taskOrder.whseName" th:value="${order}? ${order.whseName}"
-                                               class="form-control" id="taskOrder.whseName" placeholder="仓库名称"  maxlength="30" readonly/>
+                                        <input type="text" name="whseName" th:value="${order}? ${order.whseName}"
+                                               class="form-control" id="whseName" placeholder="仓库名称"  maxlength="30" readonly/>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="taskOrder.productCount" class="col-sm-2 control-label"> 订单预期数量</label>
-
+                                    <label for="productCount" class="col-sm-2 control-label"> 订单预期数量</label>
                                     <div class="col-sm-10">
-                                        <input type="text" name="taskOrder.productCount" th:value="${order}? ${order.productCount}"
-                                               class="form-control" id="taskOrder.productCount" placeholder="订单预期数量"  maxlength="30" readonly/>
+                                        <input type="text" name="productCount" th:value="${order}? ${order.productCount}"
+                                               class="form-control" id="productCount" placeholder="订单预期数量"  maxlength="30" readonly/>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="pluginStatus" class="col-sm-2 control-label">订单状态</label>
-
                                     <div class="col-sm-10">
                                         <select  name="pluginStatus" class="form-control" id="pluginStatus" disabled="true">
                                             <option value="1">未分配</option>
@@ -82,6 +76,7 @@
                                         </select>
                                     </div>
                                 </div>
+
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">分配任务</label>
                                     <div th:if="${counters}==null">
@@ -104,7 +99,7 @@
                                                     <td th:text="${counter.getCounterCode()}"></td>
                                                     <td th:text="${counter.getCounterName()}"></td>
                                                     <td th:text="${counter.getCounterStatus()}==1?'空闲':'使用中'" id="status">status</td>
-                                                    <td><input type="number" value="0"  name="productCount" placeholder="子任务产成品目标数量" /></td>
+                                                    <td><input type="number" value="0"  name="lastAllocationPlan" placeholder="最后一次的分配方案" /></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -117,7 +112,6 @@
                             <!-- /.box-body -->
                             </div>
                             <div class="box-footer" style="text-align: center;">
-
                                 <button type="submit" class="btn btn-info">保存</button>
                             </div>
                             <!-- /.box-footer -->

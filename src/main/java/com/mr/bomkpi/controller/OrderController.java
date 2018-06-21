@@ -4,11 +4,15 @@ import com.mr.bomkpi.entity.TaskCounter;
 import com.mr.bomkpi.entity.TaskOrder;
 import com.mr.bomkpi.repository.TaskCounterRepository;
 import com.mr.bomkpi.repository.TaskOrderRepository;
+import com.mr.bomkpi.repository.TaskRepository;
+import com.mr.bomkpi.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
+import java.security.Principal;
 import java.util.List;
 
 /**
@@ -21,6 +25,10 @@ public class OrderController {
     private TaskCounterRepository counterRepository;
     @Autowired
     private TaskOrderRepository orderRepository;
+    @Autowired
+    private TaskRepository taskRepository;
+    @Autowired
+    private OrderService orderService;
 
     @GetMapping("/order/getOrders")
     public String getOrders(Model model) {
@@ -30,6 +38,12 @@ public class OrderController {
         return "order/list";
     }
 
+    /**
+     *
+     * @param model
+     * @param id
+     * @return
+     */
     @GetMapping("/order/form")
     public String form(Model model, Long id) {
         TaskOrder order = orderRepository.getOne(id);
@@ -42,7 +56,19 @@ public class OrderController {
             model.addAttribute("counters",counters);
         }
         model.addAttribute("order", order);
-        return "task/form";
+        return "order/form";
+    }
+
+    /**
+     * 应该是将order 数据带过来，然后通过order 将柜台的子任务数据量带上，数据落库后，需要分配的次数和分配数量字段。
+     * @param model
+     * @param order
+     * @return
+     */
+    @PostMapping("/order/generateTask")
+    public String generateTask(Model model, TaskOrder order, Principal principal){
+        orderService.saveTasks(order,principal);
+        return "task/list";
     }
 
 

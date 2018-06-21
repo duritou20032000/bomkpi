@@ -23,10 +23,15 @@ public class Task implements Serializable {
     @Column(name = "task_code")
     private String taskCode;
     /**
-     * 子任务创建人
+     * 子任务创建人 名称
      */
-    @Column(name = "create_user_code")
-    private String createrCode;
+    @Column(name = "create_user_name")
+    private String createrName;
+    /**
+     * 子任务修改人 名称
+     */
+    @Column(name = "last_modify_user_name")
+    private String lastModifyUserName;
 
     /**
      * 子任务创建时间
@@ -34,6 +39,12 @@ public class Task implements Serializable {
     @Column(name = "creation_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date creationDate;
+    /**
+     * 子任务修改时间
+     */
+    @Column(name = "last_modify_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date lastModifyDate;
 
     /**
      * 领取子任务时间
@@ -132,12 +143,20 @@ public class Task implements Serializable {
         return description;
     }
 
-    public String getCreaterCode() {
-        return createrCode;
+    public String getCreaterName() {
+        return createrName;
     }
 
-    public void setCreaterCode(String createrCode) {
-        this.createrCode = createrCode;
+    public void setCreaterName(String createrName) {
+        this.createrName = createrName;
+    }
+
+    public String getLastModifyUserName() {
+        return lastModifyUserName;
+    }
+
+    public void setLastModifyUserName(String lastModifyUserName) {
+        this.lastModifyUserName = lastModifyUserName;
     }
 
     public void setDescription(String description) {
@@ -232,5 +251,13 @@ public class Task implements Serializable {
 
     public void setOrderCode(String orderCode) {
         this.orderCode = orderCode;
+    }
+
+    public Date getLastModifyDate() {
+        return lastModifyDate;
+    }
+
+    public void setLastModifyDate(Date lastModifyDate) {
+        this.lastModifyDate = lastModifyDate;
     }
 }
