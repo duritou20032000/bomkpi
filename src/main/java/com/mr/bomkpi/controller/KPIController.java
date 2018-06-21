@@ -6,6 +6,7 @@ import com.mr.bomkpi.entity.KPIotherData;
 import com.mr.bomkpi.repository.KpiCaculationRepository;
 import com.mr.bomkpi.repository.KpidataRepository;
 import com.mr.bomkpi.repository.KpiotherDataRepository;
+import com.mr.bomkpi.repository.WorknodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +26,9 @@ public class KPIController {
     @Autowired
     private KpiotherDataRepository kpiotherDataRepository;
 
+    @Autowired
+    private WorknodeRepository worknodeRepository;
+
     @GetMapping("/kpi/getKpis")
     public String getKpis(Model model){
 
@@ -40,4 +44,13 @@ public class KPIController {
 
         return "kpi/list";
     }
+
+
+    @GetMapping("/kpi/form")
+    public String form(Model model){
+
+        return "kpi/form";
+    }
+
+
 }

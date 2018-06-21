@@ -43,7 +43,7 @@ public class BomkpiApplicationTests {
 
     @Test
 	public void resource(){
-		User user = userService.findByUsername("admin");
+		User user = userService.findByUsername("zhangxu");
 		String sbn = user.getSubject().getSubjectName();
 		List<SubjectGroup> lists = user.getSubject().getSubjectGroups();
 		for (SubjectGroup s : lists) {
