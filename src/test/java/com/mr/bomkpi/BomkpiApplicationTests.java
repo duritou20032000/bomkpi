@@ -21,6 +21,7 @@ public class BomkpiApplicationTests {
 
 	@Autowired
 	private UserService userService;
+
 	@Autowired
 	private PolicyService policyService;
 
@@ -29,8 +30,11 @@ public class BomkpiApplicationTests {
 	 */
 	@Test
 	public void contextLoads() {
-		User user = userService.findByUsername("admin");
-		String passsword = new PasswordUtil().encode("admin123");
+//		User user = userService.findByUsername("admin");
+//		String passsword = new PasswordUtil().encode("admin123");
+
+		User user = userService.findByUsername("zhangxu");
+		String passsword = new PasswordUtil().encode("123456");
 
 		user.setPassword(passsword);
 		user.setLastModifyDate(new Date(System.currentTimeMillis()));

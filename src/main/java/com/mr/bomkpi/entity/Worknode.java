@@ -17,21 +17,13 @@ public class Worknode implements Serializable{
      * 作业环节编码
      */
     @Column(name = "node_code")
-    private Long nodeCode;
+    private String nodeCode;
 
     @Column(name = "node_name")
     private String   nodeName;
 
     @Column(name = "node_status")
     private String  nodeStatus;
-    /**
-     * 仓库
-     */
-    @Column(name = "whse_code")
-    private String whseCode    ;
-
-    @Column(name = "whse_name")
-    private String  whseName;
 
     private String  description;
 
@@ -46,11 +38,11 @@ public class Worknode implements Serializable{
         this.id = id;
     }
 
-    public Long getNodeCode() {
+    public String getNodeCode() {
         return nodeCode;
     }
 
-    public void setNodeCode(Long nodeCode) {
+    public void setNodeCode(String nodeCode) {
         this.nodeCode = nodeCode;
     }
 
@@ -68,22 +60,6 @@ public class Worknode implements Serializable{
 
     public void setNodeStatus(String nodeStatus) {
         this.nodeStatus = nodeStatus;
-    }
-
-    public String getWhseCode() {
-        return whseCode;
-    }
-
-    public void setWhseCode(String whseCode) {
-        this.whseCode = whseCode;
-    }
-
-    public String getWhseName() {
-        return whseName;
-    }
-
-    public void setWhseName(String whseName) {
-        this.whseName = whseName;
     }
 
     public String getDescription() {

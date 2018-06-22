@@ -27,13 +27,13 @@
                         </div>
                         <!-- /.box-header -->
                         <!-- form start -->
-                        <form class="form-horizontal" action="#" th:action="@{/kpi/addNode}" th:object="${node}" method="post" accept-charset="UTF-8" onsubmit="document.characterSet='UTF-8'">
+                        <form class="form-horizontal"  th:action="@{/kpi/addNode}" th:object="${worknode}" method="post" accept-charset="UTF-8" onsubmit="document.characterSet='UTF-8'">
                             <div class="box-body" >
                                 <div class="form-group" hidden="true">
                                     <label for="id" class="col-sm-2 control-label">ID</label>
 
                                     <div class="col-sm-10">
-                                        <input type="text" name="id" th:value="${node}? ${node.id}"
+                                        <input type="text" name="id" th:value="${worknode}? ${worknode.id}"
                                                class="form-control" id="id" placeholder="Id"  maxlength="30"/>
                                     </div>
                                 </div>
@@ -41,8 +41,8 @@
                                     <label for="code" class="col-sm-2 control-label">作业环节编码</label>
 
                                     <div class="col-sm-10">
-                                        <input type="text" name="nodeCode" th:value="${node}? ${node.nodeCode}"
-                                               class="form-control" id="code" placeholder="请填写柜台编码" required="required" maxlength="30"/>
+                                        <input type="text" name="nodeCode" th:value="${worknode}? ${worknode.nodeCode}"
+                                               class="form-control" id="code" placeholder="作业环节编码" required="required" maxlength="30"/>
                                     </div>
                                 </div>
 
@@ -50,8 +50,8 @@
                                     <label for="name" class="col-sm-2 control-label">作业环节名称</label>
 
                                     <div class="col-sm-10">
-                                        <input type="text" name="nodeName" th:value="${node}? ${node.nodeName}"
-                                               class="form-control" id="name" placeholder="请填写柜台名称"
+                                        <input type="text" name="nodeName" th:value="${worknode}? ${worknode.nodeName}"
+                                               class="form-control" id="name" placeholder="作业环节名称"
                                                maxlength="100"/>
                                     </div>
                                 </div>
@@ -67,31 +67,10 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="whseCode" class="col-sm-2 control-label">仓库编码</label>
-
-                                    <div class="col-sm-10">
-                                        <select  name="whseCode" th:value="${node}? ${node.WhseCode}"
-                                               class="form-control" id="whseCode" placeholder="所属仓库编码"
-                                               required="required" maxlength="30">
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="whseName" class="col-sm-2 control-label">仓库名称</label>
-
-                                    <div class="col-sm-10">
-                                        <select  name="whseName" th:value="${node}? ${node.WhseName}"
-                                               class="form-control" id="whseName" placeholder="所属仓库名称">
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
                                     <label for="desc" class="col-sm-2 control-label">说明</label>
 
                                     <div class="col-sm-10">
-                                        <input type="text" name="description" th:value="${node}? ${node.description}"
+                                        <input type="text" name="description" th:value="${worknode}? ${worknode.description}"
                                                class="form-control" id="desc" placeholder="说明"/>
                                     </div>
                                 </div>

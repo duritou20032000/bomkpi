@@ -32,8 +32,6 @@
                                     <th>作业环节编码</th>
                                     <th>作业环节名称</th>
                                     <th>作业环节状态</th>
-                                    <th>仓库编码</th>
-                                    <th>仓库名称</th>
                                     <th>说明</th>
                                 </tr>
                                 </thead>
@@ -44,9 +42,7 @@
 
                                     <td th:text="${node.nodeCode}">NodeCode</td>
                                     <td th:text="${node.nodeName}">nodeName</td>
-                                    <td th:text="${node.nodeStatus}">nodeStatus</td>
-                                    <td th:text="${node.whseCode}">whseCode</td>
-                                    <td th:text="${node.whseName}">whseName</td>
+                                    <td th:text="${node.nodeStatus}==1?'启用':'禁用'" id="status">status</td>
                                     <td th:text="${node.description}">description</td>
                                     <!--<td th:text="${#dates.format(recorder.syncDate,'yyyy-MM-dd HH:mm:ss')}">2018-05-25</td>-->
 
@@ -68,7 +64,6 @@
 </div>
 
 <div th:replace="script"></div>
-
-<!--<script th:src="@{/js/list-page.js}"></script>-->
+<script th:src="@{/js/echarts.js}"></script>
 </body>
 </html>
