@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <script th:src="@{/js/echarts.js}"></script>
     <div th:replace="head"></div>
     <!-- DataTables -->
     <link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap.css"/>
@@ -66,10 +67,11 @@
                     <!-- /.box -->
                 </div>
                 <!-- /.col -->
+                </div>
             </div>
-
         </section>
         <section class="content">
+            <div id="chartmain" style="width:600px; height: 400px;"></div>
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box">
@@ -77,38 +79,39 @@
                             <div class="box-header">
                                 <a th:href="@{/kpi/others}" title="新增额外绩效"><span class="glyphicon glyphicon-plus">额外绩效</span></a>
                             </div>
-                        <div class="box-body">
-                            <table id="dataTable2" class="table table-bordered table-striped">
-                                <thead>
-                                <tr>
-                                    <th>序号</th>
+                            <div class="box-body">
+                                <table id="dataTable2" class="table table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>序号</th>
 
-                                    <th>用户</th>
-                                    <th>仓库编码</th>
-                                    <th>仓库名称</th>
-                                    <th>工作时间</th>
-                                    <th>工作描述</th>
-                                    <th>开始时间</th>
-                                    <th>结束时间</th>
-                                    <th>间断</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    <tr th:each="record:${oRecorders}">
-                                        <td th:text="${record.id}" hidden="true">1</td>
-                                        <td th:text="${recordStat.count}">1</td>
-
-                                        <td th:text="${record.user.getUsername()}">UserName</td>
-                                        <td th:text="${record.whseCode}">whseCode</td>
-                                        <td th:text="${record.whseName}">whseName</td>
-                                        <td th:text="${#dates.format(record.workDate,'yyyy-MM-dd HH:mm:ss')}">2018-05-25</td>
-                                        <td th:text="${record.workDesc}">workDesc</td>
-                                        <td th:text="${#dates.format(record.beginDate,'yyyy-MM-dd HH:mm:ss')}">2018-05-25</td>
-                                        <td th:text="${#dates.format(record.endDate,'yyyy-MM-dd HH:mm:ss')}">2018-05-25</td>
-                                        <td th:text="${record.interrupted}">workDesc</td>
+                                        <th>用户</th>
+                                        <th>仓库编码</th>
+                                        <th>仓库名称</th>
+                                        <th>工作时间</th>
+                                        <th>工作描述</th>
+                                        <th>开始时间</th>
+                                        <th>结束时间</th>
+                                        <th>间断</th>
                                     </tr>
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="record:${oRecorders}">
+                                            <td th:text="${record.id}" hidden="true">1</td>
+                                            <td th:text="${recordStat.count}">1</td>
+
+                                            <td th:text="${record.user.getUsername()}">UserName</td>
+                                            <td th:text="${record.whseCode}">whseCode</td>
+                                            <td th:text="${record.whseName}">whseName</td>
+                                            <td th:text="${#dates.format(record.workDate,'yyyy-MM-dd HH:mm:ss')}">2018-05-25</td>
+                                            <td th:text="${record.workDesc}">workDesc</td>
+                                            <td th:text="${#dates.format(record.beginDate,'yyyy-MM-dd HH:mm:ss')}">2018-05-25</td>
+                                            <td th:text="${#dates.format(record.endDate,'yyyy-MM-dd HH:mm:ss')}">2018-05-25</td>
+                                            <td th:text="${record.interrupted}">workDesc</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <!-- /.box-body -->
                     </div>
@@ -122,7 +125,34 @@
     </div>
 
 </div>
+<script type="text/javascript">
+    //指定图标的配置和数据
+    var option = {
+        title:{
+            text:'ECharts 数据统计'
+        },
+        tooltip:{},
+        legend:{
+            data:['用户来源']
+        },
+        xAxis:{
+            data:["Android","IOS","PC","Ohter"]
+        },
+        yAxis:{
 
+        },
+        series:[{
+            name:'访问量',
+            type:'bar',
+            data:[500,200,360,100]
+        }]
+    };
+    //初始化echarts实例
+    var myChart = echarts.init(document.getElementById('chartmain'));
+
+    //使用制定的配置项和数据显示图表
+    myChart.setOption(option);
+</script>
 <div th:replace="script"></div>
 <script th:src="@{/js/kpi.js}"></script>
 </body>
