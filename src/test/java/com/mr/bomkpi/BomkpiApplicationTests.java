@@ -1,7 +1,9 @@
 package com.mr.bomkpi;
 
+import com.mr.bomkpi.entity.AsnVo;
 import com.mr.bomkpi.entity.SubjectGroup;
 import com.mr.bomkpi.entity.User;
+import com.mr.bomkpi.repository.AsnVoRepository;
 import com.mr.bomkpi.service.PolicyService;
 import com.mr.bomkpi.service.UserService;
 import com.mr.bomkpi.util.PasswordUtil;
@@ -9,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Date;
@@ -24,6 +27,9 @@ public class BomkpiApplicationTests {
 
 	@Autowired
 	private PolicyService policyService;
+
+	@Autowired
+	private AsnVoRepository asnVoRepository;
 
 	/**
 	 * 密码加密
@@ -70,5 +76,13 @@ public class BomkpiApplicationTests {
 			d=d+t;
 		}
 		System.out.println(d);
+	}
+	@Test
+	public  void asnDesc(){
+		Sort sort = new Sort(Sort.Direction.DESC, "lastModifyDate");
+		List<AsnVo> asns = asnVoRepository.findAll(sort);
+		for (AsnVo asn : asns) {
+			System.out.println("ASN-->>>>> "+ asn.getAsnNbr() +"====" + asn.getLastModifyDate());
+		}
 	}
 }
