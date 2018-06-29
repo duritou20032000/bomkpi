@@ -61,8 +61,11 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         //内存明文密码
 //        auth.inMemoryAuthentication().withUser("admin").password("123456").roles("admin");
-//数据库保存的密码，这里注意要加密passwordEncoder，很多视频没讲这里
-        auth.userDetailsService(myUserDetailService).passwordEncoder(new PasswordUtil());
+//       数据库保存的密码，这里注意要加密passwordEncoder，很多视频没讲这里
+        /**
+         * 如果是从WMS跳转过来的，flag=1，则不适用加密的方式
+         */
+            auth.userDetailsService(myUserDetailService).passwordEncoder(new PasswordUtil());
 
     }
 

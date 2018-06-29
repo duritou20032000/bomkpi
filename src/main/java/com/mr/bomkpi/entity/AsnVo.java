@@ -1,6 +1,5 @@
 package com.mr.bomkpi.entity;
 
-import org.springframework.context.annotation.Configuration;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
