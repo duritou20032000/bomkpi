@@ -1,11 +1,7 @@
 package com.mr.bomkpi;
 
-import com.mr.bomkpi.entity.AsnVo;
-import com.mr.bomkpi.entity.SubjectGroup;
-import com.mr.bomkpi.entity.User;
-import com.mr.bomkpi.repository.AsnDtlVoRepository;
-import com.mr.bomkpi.repository.AsnHdrVoRepository;
-import com.mr.bomkpi.repository.AsnVoRepository;
+import com.mr.bomkpi.entity.*;
+import com.mr.bomkpi.repository.*;
 import com.mr.bomkpi.service.PolicyService;
 import com.mr.bomkpi.service.UserService;
 import com.mr.bomkpi.util.PasswordUtil;
@@ -39,15 +35,21 @@ public class BomkpiApplicationTests {
     @Autowired
     private AsnDtlVoRepository asnDtlVoRepository;
 
+    @Autowired
+    PktHdrVoRepository pktHdrVoRepository;
+
+    @Autowired
+    LpnHdrVoRepository lpnHdrVoRepository;
+
     /**
      * 密码加密
      */
     @Test
     public void contextLoads() {
-//		User user = userService.findByUsername("admin");
-//		String passsword = new PasswordUtil().encode("admin123");
+//		User user = userService.findByUsername("chenpeng");
+//		String passsword = new PasswordUtil().encode("123456");
 
-        User user = userService.findByUsername("zhangxu");
+        User user = userService.findByUsername("wangzheng");
         String passsword = new PasswordUtil().encode("123456");
 
         user.setPassword(passsword);
@@ -120,12 +122,21 @@ public class BomkpiApplicationTests {
 
     }
 
-    @Test
-    public void CounterGroupByUserName() {
-        Long count =asnDtlVoRepository
-				.countDistinctByModifiedByAAndLastModifyDateLike("chenqiuhui");
-        System.out.println(count);
 
+    @Test
+    public void pktTest() {
+       List<PktHdrVo> pkts =  pktHdrVoRepository.queryPktHdrVos("chenpeng","2018-06-13");
+            for (PktHdrVo pkt : pkts) {
+                System.out.println(pkt.getPktWaveDoQty()+"----"+pkt.getId());
+            }
+    }
+
+    @Test
+    public void lpnTest() {
+       List<LpnHdrVo> lpns =  lpnHdrVoRepository.querylpnHdrVos("sunle","2018-06-12");
+        for (LpnHdrVo lpn : lpns) {
+            System.out.println(lpn.getId()+"----"+lpn.getLpnnbr());
+        }
     }
 
 

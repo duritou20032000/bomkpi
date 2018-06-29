@@ -88,6 +88,35 @@
                                         <th>用户</th>
                                         <th>仓库编码</th>
                                         <th>仓库名称</th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="asn:${asns}">
+                                        <td th:text="${asn.id}" hidden="true">1</td>
+                                        <td th:text="${asnStat.count}">1</td>
+
+                                        <!--<td th:text="${asn.}">UserName</td>-->
+                                        <td th:text="${asn.whseCode}">whseCode</td>
+                                        <td th:text="${asn.whseName}">whseName</td>
+                                        <!--<td th:text="${#dates.format(record.workDate,'yyyy-MM-dd HH:mm:ss')}">2018-05-25</td>-->
+                                        <!--<td th:text="${record.workDesc}">workDesc</td>-->
+                                        <!--<td th:text="${#dates.format(record.beginDate,'yyyy-MM-dd HH:mm:ss')}">2018-05-25</td>-->
+                                        <!--<td th:text="${#dates.format(record.endDate,'yyyy-MM-dd HH:mm:ss')}">2018-05-25</td>-->
+                                        <!--<td th:text="${record.interrupted}">workDesc</td>-->
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="box-body">
+                                <table id="dataTable2" class="table table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>序号</th>
+
+                                        <th>用户</th>
+                                        <th>仓库编码</th>
+                                        <th>仓库名称</th>
                                         <th>工作时间</th>
                                         <th>工作描述</th>
                                         <th>开始时间</th>
