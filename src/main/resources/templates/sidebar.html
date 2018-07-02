@@ -22,7 +22,7 @@
                     <!--</li>-->
                 <!--</ul>-->
             <!--</li>-->
-            <li class="treeview active">
+            <li class="treeview">
                 <a>
                     <span>柜台管理</span>
                     <span class="pull-right-container">
@@ -30,7 +30,7 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li>
+                    <li class="">
                         <a href="#" th:href="@{/counter/queryAll}">
                             <i class="fa fa-circle-o"></i>
                             <span>柜台信息</span>
@@ -38,7 +38,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="treeview active">
+            <li class="treeview">
                 <a>
                     <span>加工单管理</span>
                     <span class="pull-right-container">
@@ -54,7 +54,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="treeview active">
+            <li class="treeview">
                 <a>
                     <span>任务管理</span>
                     <span class="pull-right-container">
@@ -63,14 +63,14 @@
                 </a>
                 <ul class="treeview-menu">
                     <li>
-                        <a href="#" th:href="@{/counter/queryAll}">
+                        <a href="#" th:href="@{/task/queryAll}">
                             <i class="fa fa-circle-o"></i>
                             <span>任务分配</span>
                         </a>
                     </li>
                 </ul>
             </li>
-            <li class="treeview active">
+            <li class="treeview">
                 <a>
                     <span>单人任务管理</span>
                     <span class="pull-right-container">
@@ -86,7 +86,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="treeview active">
+            <li class="treeview">
                 <a>
                     <span>团队任务管理</span>
                     <span class="pull-right-container">
@@ -102,7 +102,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="treeview active">
+            <li class="treeview">
                 <a>
                     <span>绩效管理</span>
                     <span class="pull-right-container">
@@ -124,26 +124,6 @@
                     </li>
                 </ul>
             </li>
-
-            <li class="treeview active">
-                <a th:href="@{/order/queryAll}">order</a>
-            </li>
-            <li class="treeview active">
-                <a th:href="@{/task/queryAll}">task</a>
-            </li>
-            <li class="treeview active">
-                <a th:href="@{/task/queryAll/singel}">singelTask</a>
-            </li>
-            <li class="treeview active">
-                <a th:href="@{/task/queryAll/team}">teamTask</a>
-            </li>
-            <li class="treeview active">
-                <a th:href="@{/kpi/queryAll}">KPI</a>
-            </li>
-            <li class="treeview active">
-                <a th:href="@{/kpi/queryAll/person}">personKPI</a>
-            </li>
-
         </ul>
     </section>
     <!-- /.sidebar -->
