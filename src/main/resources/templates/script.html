@@ -15,17 +15,15 @@
 <!-- DataTables -->
 <script th:src="@{/plugins/datatables/jquery.dataTables.min.js}"></script>
 <script th:src="@{/plugins/datatables/dataTables.bootstrap.min.js}"></script>
-<script th:src="@{/plugins/datepicker/bootstrap-datepicker.js}"></script>
-<script th:src="@{/plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js}"></script>
 
 <!-- iCheck -->
 <script th:src="@{/plugins/iCheck/icheck.min.js}"></script>
-<!--<script>-->
-    <!--$(function () {-->
-        <!--$('input').iCheck({-->
-            <!--checkboxClass: 'icheckbox_square-blue',-->
-            <!--radioClass: 'iradio_square-blue',-->
-            <!--increaseArea: '20%' // optional-->
-        <!--});-->
-    <!--});-->
-<!--</script>-->
+<script>
+    $(function () {
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_square-blue',
+            radioClass: 'iradio_square-blue',
+            increaseArea: '20%' // optional
+        });
+    });
+</script>

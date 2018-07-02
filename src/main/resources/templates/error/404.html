@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>BOM&KPI </title>
+    <title>您访问的页面不存在 </title>
     <div th:replace="head"></div>
     <div th:remove="all">
         <meta charset="utf-8"/>
@@ -21,10 +21,8 @@
              folder instead of downloading all of them to reduce the load. -->
         <link rel="stylesheet" href="/dist/css/skins/_all-skins.min.css"/>
 
-
         <!-- iCheck -->
         <link rel="stylesheet" href="/plugins/iCheck/square/blue.css"/>
-
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -32,56 +30,58 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
     </div>
-    <script >
-            function check(){
-                var a=window.location.search;
-                var b="?error";
-                if(a==b){
-                alert("账号或密码错误\n请检查并重新输入");
-                    }
-                }
-    </script>
 </head>
-<body class="hold-transition login-page">
-<div class="login-box">
-    <div class="login-logo">
-        <b>加工和绩效管理平台</b>
-    </div>
-    <!-- /.login-logo -->
-    <div class="login-box-body">
-        <p class="login-box-msg"></p>
+<!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
+<body class="hold-transition skin-blue layout-top-nav">
+<div class="wrapper">
 
-        <form th:action="@{/user/login}" method="post">
-            <div class="form-group has-feedback">
-                <input type="text" class="form-control" placeholder="username" name="username" required="required"/>
-                <span class="glyphicon glyphicon-user form-control-feedback"></span>
-            </div>
-            <div class="form-group has-feedback">
-                <input type="password" class="form-control" placeholder="Password" name="password" required="required"/>
-                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-            </div>
-            <div class="row">
-                <div class="col-xs-8">
-                    <div class="checkbox icheck">
-                        <label>
-                            <input type="checkbox" name="remember-me"/> 记住密码
-                        </label>
+
+    <!-- Full Width Column -->
+    <div class="content-wrapper">
+        <div class="container">
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <section class="content">
+                <div class="error-page">
+                    <h2 class="headline text-yellow"> 404</h2>
+
+                    <div class="error-content">
+                        <h3><i class="fa fa-warning text-yellow"></i> Oops! Page not found.</h3>
+                        <br/> <br/>
+                        <p>
+                            We could not find the page you were looking for.
+                            Meanwhile, you may <a href="/index">return to dashboard</a> or try using the search form.
+                        </p>
+
+
                     </div>
+                    <!-- /.error-content -->
                 </div>
-                <!-- /.col -->
-                <div class="col-xs-4">
-                    <button type="submit" class="btn btn-primary btn-block btn-flat">登录</button>
-                </div>
-                <!-- /.col -->
-            </div>
-        </form>
-
-
+                <!-- /.error-page -->
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.container -->
     </div>
-    <!-- /.login-box-body -->
+    <!-- /.content-wrapper -->
+    <div th:replace="footer"></div>
+    <footer class="main-footer" th:remove="all">
+        <div class="container">
+            <div class="pull-right hidden-xs">
+                <b>Version</b> 2.3.8
+            </div>
+            <strong>Copyright &copy; 2014-2016 <a href="https://github.com/jonsychen">jonsychen</a>.</strong> All
+            rights
+            reserved.
+        </div>
+        <!-- /.container -->
+    </footer>
 </div>
-<!-- /.login-box -->
-
+<!-- ./wrapper -->
 <div th:replace="script"></div>
 <div th:remove="all">
     <!-- jQuery 2.2.3 -->
@@ -98,17 +98,9 @@
     <!-- SlimScroll 1.3.0 -->
     <script src="/plugins/slimScroll/jquery.slimscroll.min.js"></script>
 
-    <!-- iCheck -->
-    <script src="/plugins/iCheck/icheck.min.js"></script>
-    <script>
-        $(function () {
-            $('input').iCheck({
-                checkboxClass: 'icheckbox_square-blue',
-                radioClass: 'iradio_square-blue',
-                increaseArea: '20%' // optional
-            });
-        });
-    </script>
+    <!-- DataTables -->
+    <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/plugins/datatables/dataTables.bootstrap.min.js"></script>
 </div>
 </body>
 </html>

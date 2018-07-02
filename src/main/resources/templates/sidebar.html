@@ -6,46 +6,144 @@
         <ul class="sidebar-menu">
 
             <!--Multilevel-->
-            <li th:if="${not #lists.isEmpty(navs)}" class="treeview active" th:each="nav:${navs}">
-                <a th:href="@{${nav.url}?:'#'}">
-                    <span th:text="${nav.label}">label</span>
+            <!--<li th:if="${not #lists.isEmpty(navs)}" class="treeview active" th:each="nav:${navs}">-->
+                <!--<a th:href="@{${nav.url}?:'#'}">-->
+                    <!--<span th:text="${nav.label}">label</span>-->
+                    <!--<span class="pull-right-container">-->
+                        <!--<i class="fa fa-angle-left pull-right"></i>-->
+                    <!--</span>-->
+                <!--</a>-->
+                <!--<ul class="treeview-menu" th:each="second:${nav.childNodes}">-->
+                    <!--<li th:name="${second.id}" th:data="${currentMenu}" th:class="(${second.id}==${currentMenu})?'active':''">-->
+                        <!--<a href="#" th:href="@{${second.url}}">-->
+                            <!--<i class="fa fa-circle-o"></i>-->
+                            <!--<span th:text="${second.label}">label</span>-->
+                        <!--</a>-->
+                    <!--</li>-->
+                <!--</ul>-->
+            <!--</li>-->
+            <li class="treeview active">
+                <a>
+                    <span>柜台管理</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
-                <ul class="treeview-menu" th:each="second:${nav.childNodes}">
-                    <li th:name="${second.id}" th:data="${currentMenu}" th:class="(${second.id}==${currentMenu})?'active':''">
-                        <a href="#" th:href="@{${second.url}}">
+                <ul class="treeview-menu">
+                    <li>
+                        <a href="#" th:href="@{/counter/queryAll}">
                             <i class="fa fa-circle-o"></i>
-                            <span th:text="${second.label}">label</span>
+                            <span>柜台信息</span>
                         </a>
                     </li>
                 </ul>
             </li>
-            <!--<li class="treeview active">-->
-                <!--<a th:href="@{/counter/getCounters}">柜台管理</a>-->
-            <!--</li>-->
-            <!--<li class="treeview active">-->
-                <!--<a th:href="@{/order/getOrders}">订单管理</a>-->
-            <!--</li>-->
-            <!--<li class="treeview active">-->
-                <!--<a th:href="@{/task/getTasks}">任务管理</a>-->
-            <!--</li>-->
-            <!--<li class="treeview active">-->
-                <!--<a th:href="@{/singleTask/getSingleTasks}">单人任务管理</a>-->
-            <!--</li>-->
-            <!--<li class="treeview active">-->
-                <!--<a th:href="@{/teamTask/getTeamTasks}">团队任务管理</a>-->
-            <!--</li>-->
-            <!--<li class="treeview active">-->
-                <!--<a th:href="@{/check/getChecks}">质检管理</a>-->
-            <!--</li>-->
             <li class="treeview active">
-                <a th:href="@{/kpinode/getNodes}">绩效指标管理</a>
+                <a>
+                    <span>加工单管理</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a href="#" th:href="@{/order/queryAll}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>订单信息</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
             <li class="treeview active">
-                <a th:href="@{/kpi/getKpis}">个人绩效管理</a>
+                <a>
+                    <span>任务管理</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a href="#" th:href="@{/counter/queryAll}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>任务分配</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
+            <li class="treeview active">
+                <a>
+                    <span>单人任务管理</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a href="#" th:href="@{/task/queryAll/singel}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>任务信息</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="treeview active">
+                <a>
+                    <span>团队任务管理</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a href="#" th:href="@{/task/queryAll/team}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>任务信息</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="treeview active">
+                <a>
+                    <span>绩效管理</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a href="#" th:href="@{/kpi/queryAll}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>仓库绩效信息</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" th:href="@{/kpi/queryAll/person}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>单人绩效信息</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="treeview active">
+                <a th:href="@{/order/queryAll}">order</a>
+            </li>
+            <li class="treeview active">
+                <a th:href="@{/task/queryAll}">task</a>
+            </li>
+            <li class="treeview active">
+                <a th:href="@{/task/queryAll/singel}">singelTask</a>
+            </li>
+            <li class="treeview active">
+                <a th:href="@{/task/queryAll/team}">teamTask</a>
+            </li>
+            <li class="treeview active">
+                <a th:href="@{/kpi/queryAll}">KPI</a>
+            </li>
+            <li class="treeview active">
+                <a th:href="@{/kpi/queryAll/person}">personKPI</a>
+            </li>
+
         </ul>
     </section>
     <!-- /.sidebar -->
