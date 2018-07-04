@@ -6,13 +6,9 @@ import com.mr.bomkpi.repository.WhseRepository;
 import com.mr.bomkpi.service.CounterService;
 import com.mr.bomkpi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Date;
@@ -21,7 +17,7 @@ import java.util.List;
 /**
  * @author Administrator
  */
-@Controller
+@RestController
 public class CounterController {
 
     @Autowired
@@ -37,10 +33,9 @@ public class CounterController {
      * @return
      */
     @GetMapping("/counter/getCounters")
-    public String getCounter(Model model) {
+    public List<TaskCounter> getCounter() {
         List<TaskCounter> counters = counterService.queryList();
-        model.addAttribute("counters", counters);
-        return "/counter/list";
+        return counters;
     }
 
     /**

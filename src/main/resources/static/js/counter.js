@@ -1,7 +1,10 @@
+$.ajaxSetup({headers:{'X-CSRF-TOKEN':$("#csrf_token").attr("content")}});
+
 /**
  * 联动仓库编码和名称
  */
  $(function(){
+     $("#couner").click();
     getWhseCode();
     getWhseName();
     $("#whseCode").change(function(){getWhseName();})
