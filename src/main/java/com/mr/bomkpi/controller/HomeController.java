@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
+/**
+ * 负责页面在thymeleaf框架下跳转
+ */
 @Controller
 public class HomeController {
 
@@ -20,22 +23,22 @@ public class HomeController {
         return "welcome";
     }
 
-    /**
-     * 登录页
-     *
-     * @return
-     */
     @GetMapping("/login")
     public String loginPage() {
         return "login";
     }
+
+    @GetMapping("/counter")
+    public String counterList() {
+        return "/counter/list";
+    }
+
 
     @PostMapping("/user/login")
     public String login(String username) {
         System.out.println(".......>>>>>>>>"+username);
         return "welcome";
     }
-
 
     @GetMapping("/user/logout")
     public String logout() {

@@ -21,29 +21,26 @@
         <section class="content">
             <div class="row">
                 <div class="col-xs-12">
-                    <form th:action="@{/counter/search}" method="post" th:object="${whse}">
+                    <form th:action="@{/counter/search}" method="post" th:object="${userWhseVo}">
                         <div style="display:inline;">
-                            <label for="whseCode">仓库编码</label>
+                            <label for="whseCode">仓库</label>
                             <select style="width: 30%;height: 34px;font-size: 14px; line-height: 1.42857143;color: #555555;background-color: #fff;"
                                     data-live-search="true"  name="whseCode" id="whseCode" placeholder="所属仓库编码"  maxlength="60">
                             </select>
-                        </div>
-                        <div style="display:inline;height: 34px;width: 300px;" readonly="true" >
-                            <label for="whseCode">仓库名称</label>
-                            <select style="width: 30%;height: 34px;font-size: 14px; line-height: 1.42857143;color: #555555;background-color: #fff;"
-                                    data-live-search="true" name="whseName" id="whseName"   placeholder="所属仓库名称">
-                            </select>
+
+                            <button type="submit" id="search"><span><i class="glyphicon glyphicon-search"></i></span></button>
+                            <button type="button" id="remove" onclick="remove();"><span><i class="glyphicon glyphicon-remove"></i></span></button>
                         </div>
                         <div style="display:inline;height: 34px;width: 30px;margin-left: 3px;">
-                            <button><a th:href="@{/counter/clear}" title="清空"><span><i class="glyphicon glyphicon-remove"></i></span></a></button>
-                            <button type="submit"><span><i class="glyphicon glyphicon-search"></i></span></button>
+
+
                         </div>
                     </form>
+
                     <div class="box">
                         <div class="box-header">
                                 <a th:href="@{/counter/form}" title="新增柜台"><span class="glyphicon glyphicon-plus"></span></a>
                         </div>
-
 
                         <div class="box-body">
                             <table id="dataTable" class="table table-bordered table-striped">
@@ -63,26 +60,26 @@
                                     <th>修改</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <tr th:each="counter:${counters}">
-                                    <td th:text="${counter.id}" hidden="true">1</td>
-                                    <td th:text="${counterStat.count}">1</td>
-                                    <td th:text="${counter.counterCode}">code</td>
-                                    <td th:text="${counter.counterName}">name</td>
-                                    <td th:text="${counter.whseCode}">code</td>
-                                    <td th:text="${counter.whseName}">name</td>
-                                    <td th:text="${counter.CounterStatus}==1?'空闲':'使用中'" id="status">status</td>
-                                    <td th:text="${counter.creater}">creater</td>
-                                    <td th:text="${#dates.format(counter.creationDate,'yyyy-MM-dd HH:mm:ss')}">createdate</td>
-                                    <td th:text="${counter.lastModifyName}">modify</td>
-                                    <td th:text="${#dates.format(counter.lastModifyDate,'yyyy-MM-dd HH:mm:ss')}">modifydate</td>
-                                    <td th:text="${counter.description}">name</td>
-                                    <td style="text-align: center">
-                                        <a th:href="@{/counter/form(id=${counter.id})}"><span class="glyphicon glyphicon-edit" title="编辑"></span></a>
-                                    </td>
+                                <!--<tbody>-->
+                                <!--<tr th:each="counter:${counters}">-->
+                                    <!--<td th:text="${counter.id}" hidden="true">1</td>-->
+                                    <!--<td th:text="${counterStat.count}">1</td>-->
+                                    <!--<td th:text="${counter.counterCode}">code</td>-->
+                                    <!--<td th:text="${counter.counterName}">name</td>-->
+                                    <!--<td th:text="${counter.whseCode}">code</td>-->
+                                    <!--<td th:text="${counter.whseName}">name</td>-->
+                                    <!--<td th:text="${counter.CounterStatus}==1?'空闲':'使用中'" id="status">status</td>-->
+                                    <!--<td th:text="${counter.creater}">creater</td>-->
+                                    <!--<td th:text="${#dates.format(counter.creationDate,'yyyy-MM-dd HH:mm:ss')}">createdate</td>-->
+                                    <!--<td th:text="${counter.lastModifyName}">modify</td>-->
+                                    <!--<td th:text="${#dates.format(counter.lastModifyDate,'yyyy-MM-dd HH:mm:ss')}">modifydate</td>-->
+                                    <!--<td th:text="${counter.description}">name</td>-->
+                                    <!--<td style="text-align: center">-->
+                                        <!--<a th:href="@{/counter/form(id=${counter.id})}"><span class="glyphicon glyphicon-edit" title="编辑"></span></a>-->
+                                    <!--</td>-->
 
-                                </tr>
-                                </tbody>
+                                <!--</tr>-->
+                                <!--</tbody>-->
                             </table>
                         </div>
                         <!-- /.box-body -->
@@ -99,8 +96,92 @@
 
     <div th:replace="footer"></div>
 </div>
-
 <div th:replace="script"></div>
+<script>
+    $(function () {
+        $('#dataTable').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            language: {
+                "sProcessing": "处理中...",
+                "sLengthMenu": "显示 _MENU_ 项结果",
+                "sZeroRecords": "没有匹配结果",
+                "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+                "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+                "sInfoPostFix": "",
+                "sSearch": "搜索:",
+                "sUrl": "",
+                "sEmptyTable": "表中数据为空",
+                "sLoadingRecords": "载入中...",
+                "sInfoThousands": ",",
+                "oPaginate": {
+                    "sFirst": "首页",
+                    "sPrevious": "上页",
+                    "sNext": "下页",
+                    "sLast": "末页"
+                },
+                "oAria": {
+                    "sSortAscending": ": 以升序排列此列",
+                    "sSortDescending": ": 以降序排列此列"
+                }
+            },
+            ajax:{
+                url:"/counter/getCounters",
+                type:"get",
+                data:"username="+username,
+                dataSrc:""
+            },
+            columns:[
+                {
+                    "mDataProp" : "id",
+                    "sClass" : "center"
+                },
+                {
+                    "mDataProp" : "counterCode"
+                },
+                {
+                    "mDataProp" : "counterName"
+                },
+                {
+                    "mDataProp" : "whseCode"
+                },
+                {
+                    "mDataProp" : "whseName"
+                },
+                {
+                    "mDataProp" : "CounterStatus"
+                },
+                {
+                    "mDataProp" : "creater"
+                },
+                {
+                    "mDataProp" : "creationDate",
+                    "mRender" : function(data, type, full) {
+                        return "<div class='visible-md visible-lg hidden-sm hidden-xs action-buttons'><a class='blue' href='#'><i class='icon-zoom-in bigger-130'></i></a><a class='green' href='#'><i class='icon-pencil bigger-130'></i></a><a class='red' href='#'><i class='icon-trash bigger-130'></i></a></div>"
+                    }
+                },
+                {
+                    "mDataProp" : "lastModifyName"
+                },
+
+                {
+                    "mDataProp" : "lastModifyDate",
+                    "mRender" : function(data, type, full) {
+                        return "<div class='visible-md visible-lg hidden-sm hidden-xs action-buttons'><a class='blue' href='#'><i class='icon-zoom-in bigger-130'></i></a><a class='green' href='#'><i class='icon-pencil bigger-130'></i></a><a class='red' href='#'><i class='icon-trash bigger-130'></i></a></div>"
+                    }
+                },
+                {
+                    "mDataProp" : "description"
+                }
+            ]
+        });
+    });
+</script>
 <script th:src="@{/js/list-page.js}"></script>
 <script th:src="@{/js/counter.js}"></script>
 </body>

@@ -28,7 +28,7 @@
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="one">
                     <a th:href="@{#}" class="dropdown-toggle" data-toggle="dropdown">
-                        <span class="glyphicon glyphicon-user"></span> &nbsp;&nbsp;<span sec:authentication="name"></span>
+                        <span class="glyphicon glyphicon-user"></span> &nbsp;&nbsp;<span sec:authentication="name" id="username"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <li sec:authentication="principal.authorities"></li>

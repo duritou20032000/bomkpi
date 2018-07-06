@@ -1,16 +1,22 @@
 package com.mr.bomkpi.controller;
 
 import com.mr.bomkpi.entity.TaskCounter;
+import com.mr.bomkpi.entity.User;
+import com.mr.bomkpi.entity.UserWhseVo;
 import com.mr.bomkpi.entity.Whse;
+import com.mr.bomkpi.repository.UserRepository;
+import com.mr.bomkpi.repository.UserWhseVoRepository;
 import com.mr.bomkpi.repository.WhseRepository;
 import com.mr.bomkpi.service.CounterService;
 import com.mr.bomkpi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +27,11 @@ import java.util.List;
 public class CounterController {
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserWhseVoRepository userWhseVoRepository;
+    @Autowired
     private CounterService counterService;
     @Autowired
     private WhseRepository whseRepository;
@@ -29,12 +40,19 @@ public class CounterController {
      * 1.根据用户所属的仓库显示所属的仓库的柜台
      * 2.没有所属仓库，默认所有柜台，或所属多个仓库，显示多个柜台。
      *
-     * @param model
      * @return
      */
     @GetMapping("/counter/getCounters")
-    public List<TaskCounter> getCounter() {
-        List<TaskCounter> counters = counterService.queryList();
+    public List<TaskCounter> getCounter(String username) {
+
+        List<TaskCounter> counters = new ArrayList<>();
+        List<UserWhseVo> userWhses = new ArrayList<>();
+
+        if (!StringUtil.isEmptyOrNull(username)) {
+            User user = userRepository.findByUsername(username);
+             userWhses = userWhseVoRepository.findAllByUserId(user.getUserId());
+        }
+         counters = counterService.queryList(userWhses);
         return counters;
     }
 
@@ -90,13 +108,12 @@ public class CounterController {
      *
      * @return
      */
-
-    @PostMapping("/counter/getWhseCode")
-    @ResponseBody
-    public List<Whse> getWhseCode() {
-        List<Whse>  list = whseRepository.findAll();
+    @PostMapping("/counter/getCurUserWhseCode")
+    public List<UserWhseVo> getCurUserWhseCode(String username) {
+        List<UserWhseVo> list = userWhseVoRepository.findAllByUserName(username,new Sort(Sort.Direction.ASC,"whseCode"));
         return list;
     }
+
     /**
      * 联动仓库编码和名称
      *
@@ -109,12 +126,13 @@ public class CounterController {
         Whse whse = whseRepository.findByWhseCode(code);
         return whse.getWhseName();
     }
+
     /**
      * 根据仓库搜索
      */
     @PostMapping("/counter/search")
-    public String  search(Model model,String whseCode){
-        if(StringUtil.isEmptyOrNull(whseCode)){
+    public String search(Model model, String whseCode) {
+        if (StringUtil.isEmptyOrNull(whseCode)) {
             return "redirect:/counter/getCounters";
         }
         List<TaskCounter> counters = counterService.findAllByWhseCode(whseCode);
@@ -122,8 +140,9 @@ public class CounterController {
         model.addAttribute("whseCode", whseCode);
         return "/counter/list";
     }
+
     @GetMapping("/counter/clear")
-    public String  clear(Model model){
+    public String clear(Model model) {
         return "redirect:/counter/getCounters";
     }
 

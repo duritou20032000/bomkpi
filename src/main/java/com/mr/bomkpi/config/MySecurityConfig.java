@@ -33,24 +33,22 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http
+        http.formLogin().loginPage("/login")
+                .usernameParameter("username").passwordParameter("password").loginProcessingUrl("/user/login").permitAll()
+                .and()
                 .authorizeRequests()
                 //要求授权 这种.antMatchers("/db/**").access("hasRole('ADMIN') and hasRole('DBA')")  要两个条件都具备才行
                 .antMatchers("/bootstrap/**", "/dist/**", "/js/**", "/plugins/**", "/images/**", "/", "/login").permitAll()
-                .antMatchers("/**").hasAnyAuthority("SystemAdminGroup","CommonGroup","SuperUserGroup")
+                .antMatchers("/**").hasAnyAuthority("SystemAdminGroup", "CommonGroup", "SuperUserGroup")
                 .antMatchers("/counter/**").hasAnyAuthority("SystemAdminGroup")
-                .antMatchers("/order/**").hasAnyRole("kuguan","admin")
-                .antMatchers("/task/**").hasAnyRole("kuguan","admin")
-                .antMatchers("/singleTask/**", "/teamTask/**").hasAnyRole("caozuogong","admin")
-                .antMatchers("/check/**").hasAnyRole("check","admin")
-                .antMatchers("/kpi/**").hasAnyRole("check","admin")
+                .antMatchers("/order/**").hasAnyRole("kuguan", "admin")
+                .antMatchers("/task/**").hasAnyRole("kuguan", "admin")
+                .antMatchers("/singleTask/**", "/teamTask/**").hasAnyRole("caozuogong", "admin")
+                .antMatchers("/check/**").hasAnyRole("check", "admin")
+                .antMatchers("/kpi/**").hasAnyRole("check", "admin")
                 //其余的只要求身份认证
                 .anyRequest()
                 .authenticated()
-                .and()
-//                主要是在开始测试使用
-                .formLogin()
-//                .formLogin().loginPage("/login").usernameParameter("username").passwordParameter("password").loginProcessingUrl("/user/login").permitAll()
                 .and()
                 .logout().logoutUrl("/user/logout").permitAll()
                 .and()
@@ -65,7 +63,7 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
         /**
          * 如果是从WMS跳转过来的，flag=1，则不适用加密的方式
          */
-            auth.userDetailsService(myUserDetailService).passwordEncoder(new PasswordUtil());
+        auth.userDetailsService(myUserDetailService).passwordEncoder(new PasswordUtil());
 
     }
 
