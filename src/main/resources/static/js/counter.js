@@ -1,10 +1,8 @@
 $.ajaxSetup({headers:{'X-CSRF-TOKEN':$("#csrf_token").attr("content")}});
 
-/**
- * 联动仓库编码和名称
- */
  $(function(){
     getWhseCode();
+    $("#search").change(search());
 });
 
 /**
@@ -12,9 +10,11 @@ $.ajaxSetup({headers:{'X-CSRF-TOKEN':$("#csrf_token").attr("content")}});
  */
 function getWhseCode(){
     $.ajax({
-        async:false,
+        async:true,
         url:"/counter/getCurUserWhseCode",
-        data:"username="+username,
+        data:{
+            "username":$("#username").text()
+             },
         type:"POST",
         success:function(data){
             data.unshift('');
@@ -31,7 +31,26 @@ function getWhseCode(){
 
     });
 }
-function remove(){
-    alert("test");
+function clearSelect(){
+    // console.log("test");
+    $("#whseCode").val("");
+    window.location.reload("/counter");
+
+}
+function search(){
+    // console.log("search");
+    $.ajax({
+        async:true,
+        url:"/counter/search",
+        data:{
+            "whseCode":$("#search option:selected").val()
+        },
+        type:"POST",
+        success:function(data){
+            alert("Test search");
+        }
+
+    });
+
 }
 

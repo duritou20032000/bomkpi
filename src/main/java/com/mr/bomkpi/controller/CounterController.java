@@ -3,7 +3,6 @@ package com.mr.bomkpi.controller;
 import com.mr.bomkpi.entity.TaskCounter;
 import com.mr.bomkpi.entity.User;
 import com.mr.bomkpi.entity.UserWhseVo;
-import com.mr.bomkpi.entity.Whse;
 import com.mr.bomkpi.repository.UserRepository;
 import com.mr.bomkpi.repository.UserWhseVoRepository;
 import com.mr.bomkpi.repository.WhseRepository;
@@ -13,12 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Administrator
@@ -37,14 +36,25 @@ public class CounterController {
     private WhseRepository whseRepository;
 
     /**
+     * 当前用户的所属仓库
+     *
+     * @return
+     */
+    @PostMapping("/counter/getCurUserWhseCode")
+    public List<UserWhseVo> getCurUserWhseCode(String username) {
+        List<UserWhseVo> list = userWhseVoRepository.findAllByUserName(username,new Sort(Sort.Direction.ASC,"whseCode"));
+        return list;
+    }
+
+    /**
      * 1.根据用户所属的仓库显示所属的仓库的柜台
      * 2.没有所属仓库，默认所有柜台，或所属多个仓库，显示多个柜台。
      *
      * @return
      */
-    @GetMapping("/counter/getCounters")
-    public List<TaskCounter> getCounter(String username) {
-
+    @PostMapping("/counter/getCounters")
+    public Map<String,List<TaskCounter>> getCounter(String username) {
+        Map<String,List<TaskCounter>> map = new HashMap<>();
         List<TaskCounter> counters = new ArrayList<>();
         List<UserWhseVo> userWhses = new ArrayList<>();
 
@@ -53,8 +63,21 @@ public class CounterController {
              userWhses = userWhseVoRepository.findAllByUserId(user.getUserId());
         }
          counters = counterService.queryList(userWhses);
-        return counters;
+        map.put("data",counters);
+        return map;
     }
+
+    /**
+     * 根据仓库搜索
+     */
+    @PostMapping("/counter/search")
+    public Map<String,List<TaskCounter>> search(String whseCode) {
+        Map<String,List<TaskCounter>> map = new HashMap<>();
+        List<TaskCounter> counters = counterService.findAllByWhseCode(whseCode);
+        map.put("data",counters);
+        return map;
+    }
+
 
     /**
      * 1.根据用户所属的仓库显示仓库名称
@@ -103,47 +126,7 @@ public class CounterController {
         return "redirect:/counter/getCounters";
     }
 
-    /**
-     * 联动仓库编码和名称
-     *
-     * @return
-     */
-    @PostMapping("/counter/getCurUserWhseCode")
-    public List<UserWhseVo> getCurUserWhseCode(String username) {
-        List<UserWhseVo> list = userWhseVoRepository.findAllByUserName(username,new Sort(Sort.Direction.ASC,"whseCode"));
-        return list;
-    }
 
-    /**
-     * 联动仓库编码和名称
-     *
-     * @return
-     */
-    @PostMapping("/counter/getWhseNameByCode/{val}")
-    @ResponseBody
-    public String getWhseNameByCode(@PathVariable("val") String code) {
 
-        Whse whse = whseRepository.findByWhseCode(code);
-        return whse.getWhseName();
-    }
-
-    /**
-     * 根据仓库搜索
-     */
-    @PostMapping("/counter/search")
-    public String search(Model model, String whseCode) {
-        if (StringUtil.isEmptyOrNull(whseCode)) {
-            return "redirect:/counter/getCounters";
-        }
-        List<TaskCounter> counters = counterService.findAllByWhseCode(whseCode);
-        model.addAttribute("counters", counters);
-        model.addAttribute("whseCode", whseCode);
-        return "/counter/list";
-    }
-
-    @GetMapping("/counter/clear")
-    public String clear(Model model) {
-        return "redirect:/counter/getCounters";
-    }
 
 }

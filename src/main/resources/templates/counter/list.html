@@ -21,21 +21,16 @@
         <section class="content">
             <div class="row">
                 <div class="col-xs-12">
-                    <form th:action="@{/counter/search}" method="post" th:object="${userWhseVo}">
+                    <!--<form th:action="@{/counter/search}" method="POST" th:object="${userWhseVo}">-->
                         <div style="display:inline;">
                             <label for="whseCode">仓库</label>
                             <select style="width: 30%;height: 34px;font-size: 14px; line-height: 1.42857143;color: #555555;background-color: #fff;"
-                                    data-live-search="true"  name="whseCode" id="whseCode" placeholder="所属仓库编码"  maxlength="60">
+                                    data-live-search="true"  name="whseCode"  id="whseCode" placeholder="所属仓库编码"  onchange="option()" maxlength="60">
                             </select>
-
-                            <button type="submit" id="search"><span><i class="glyphicon glyphicon-search"></i></span></button>
-                            <button type="button" id="remove" onclick="remove();"><span><i class="glyphicon glyphicon-remove"></i></span></button>
+                            <button type="button" id="search" onclick="search();"><span><i class="glyphicon glyphicon-search"></i></span></button>
+                            <button type="button" id="clear" onclick="clearSelect();"><span><i class="glyphicon glyphicon-remove"></i></span></button>
                         </div>
-                        <div style="display:inline;height: 34px;width: 30px;margin-left: 3px;">
-
-
-                        </div>
-                    </form>
+                    <!--</form>-->
 
                     <div class="box">
                         <div class="box-header">
@@ -101,12 +96,12 @@
     $(function () {
         $('#dataTable').DataTable({
             "paging": true,
-            "lengthChange": false,
+            "lengthChange": true,
             "searching": false,
             "ordering": true,
             "info": true,
             "autoWidth": false,
-            language: {
+            "language": {
                 "sProcessing": "处理中...",
                 "sLengthMenu": "显示 _MENU_ 项结果",
                 "sZeroRecords": "没有匹配结果",
@@ -130,57 +125,107 @@
                     "sSortDescending": ": 以降序排列此列"
                 }
             },
-            ajax:{
+            "ajax":{
                 url:"/counter/getCounters",
-                type:"get",
-                data:"username="+username,
-                dataSrc:""
+                type:"POST",
+                data:{
+                    username:$("#username").text()
+                    },
             },
-            columns:[
+            "columns":[
                 {
-                    "mDataProp" : "id",
+                    "data" : "id",
                     "sClass" : "center"
                 },
                 {
-                    "mDataProp" : "counterCode"
+                    "data" : "counterCode"
                 },
                 {
-                    "mDataProp" : "counterName"
+                    "data" : "counterName"
                 },
                 {
-                    "mDataProp" : "whseCode"
+                    "data" : "whseCode"
                 },
                 {
-                    "mDataProp" : "whseName"
+                    "data" : "whseName"
                 },
                 {
-                    "mDataProp" : "CounterStatus"
-                },
-                {
-                    "mDataProp" : "creater"
-                },
-                {
-                    "mDataProp" : "creationDate",
-                    "mRender" : function(data, type, full) {
-                        return "<div class='visible-md visible-lg hidden-sm hidden-xs action-buttons'><a class='blue' href='#'><i class='icon-zoom-in bigger-130'></i></a><a class='green' href='#'><i class='icon-pencil bigger-130'></i></a><a class='red' href='#'><i class='icon-trash bigger-130'></i></a></div>"
+                    "data" : "counterStatus",
+                    render: function (data, type, row, meta) {
+                        var str = "";
+                        if(data==1){
+                            str = "空闲";
+                        }else{
+                            str = "使用中";
+                        }
+                        return str;
                     }
                 },
                 {
-                    "mDataProp" : "lastModifyName"
+                    "data" : "creater"
                 },
+                {
+                    "data" : "creationDate",
+                    render: function (data, type, row, meta) {
+                        if(data != null){
+                            return new Date(Date.parse(data)).Format("yyyy-MM-dd hh:mm:ss");
+                        }
+                        return null;
+                    }
 
+                },
                 {
-                    "mDataProp" : "lastModifyDate",
-                    "mRender" : function(data, type, full) {
-                        return "<div class='visible-md visible-lg hidden-sm hidden-xs action-buttons'><a class='blue' href='#'><i class='icon-zoom-in bigger-130'></i></a><a class='green' href='#'><i class='icon-pencil bigger-130'></i></a><a class='red' href='#'><i class='icon-trash bigger-130'></i></a></div>"
+                    "data" : "lastModifyName"
+                },
+                {
+                    "data" : "lastModifyDate",
+                    render: function (data, type, row, meta) {
+                        if(data != null) {
+                            return new Date(Date.parse(data)).Format("yyyy-MM-dd hh:mm:ss");
+                        }
+                        return null;
                     }
                 },
                 {
-                    "mDataProp" : "description"
+                    "data" : "description"
+                },
+                {
+                    "data": null,
+                    "defaultContent": "<button><span class=\"glyphicon glyphicon-edit\" title=\"编辑\"></button>"
                 }
             ]
         });
+
+        $('#dataTable tbody').on( 'click', 'button', function () {
+            console.log("test");
+        } );
     });
+    Date.prototype.Format = function (fmt) { //author: meizz
+        var o = {
+            "M+": this.getMonth() + 1,
+            //月份
+            "d+": this.getDate(),
+            //日
+            "h+": this.getHours(),
+            //小时
+            "m+": this.getMinutes(),
+            //分
+            "s+": this.getSeconds(),
+            //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3),
+            //季度
+            "S": this.getMilliseconds() //毫秒
+        };
+        if (/(y+)/.test(fmt)) {
+            fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        }
+        for (var k in o) {
+            if (new RegExp("(" + k + ")").test(fmt)) {
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            }
+        }
+        return fmt;
+    };
 </script>
 <script th:src="@{/js/list-page.js}"></script>
 <script th:src="@{/js/counter.js}"></script>

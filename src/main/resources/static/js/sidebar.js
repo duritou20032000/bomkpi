@@ -1,11 +1,10 @@
 $.ajaxSetup({headers:{'X-CSRF-TOKEN':$("#csrf_token").attr("content")}});
-var username = $("#username").text();
 $(function(){
     $("#counterInfo").click(function(){
         $.ajax({
-            type:"get",
+            type:"POST",
             url:"/counter/getCounters",
-            data:"username="+username,
+            data:"username="+$("#username").text(),
             async:false,
             success:function(result) {
                     // $(location).prop('href','https://www.baidu.com');
