@@ -53,16 +53,52 @@ public class CounterController {
      * @return
      */
     @PostMapping("/counter/getCounters")
-    public Map<String,List<TaskCounter>> getCounter(String username) {
+    public Map<String,List<TaskCounter>> getCounter(TaskCounter counter,Principal principal,String fuzzy,String fuzzySearch) {
+        String username=principal.getName();
         Map<String,List<TaskCounter>> map = new HashMap<>();
         List<TaskCounter> counters = new ArrayList<>();
         List<UserWhseVo> userWhses = new ArrayList<>();
+        //获取用户过滤框里的字符
+        List<String> sArray = new ArrayList<String>();
 
         if (!StringUtil.isEmptyOrNull(username)) {
             User user = userRepository.findByUsername(username);
              userWhses = userWhseVoRepository.findAllByUserId(user.getUserId());
         }
-         counters = counterService.queryList(userWhses);
+        if ("true".equals(fuzzySearch)) {
+            //模糊查询
+            if (fuzzy!=null&&!"".equals(fuzzy)) {
+                sArray.add(" counterCode like '%" + fuzzy + "%'");
+                sArray.add(" whseCode like '%" + fuzzy + "%'");
+                sArray.add(" creater like '%" + fuzzy + "%'");
+                sArray.add(" counterStatus like '%" + fuzzy + "%'");
+            }else{
+                if (counter.getCounterCode()!=null&&!"".equals(counter.getCounterCode())) {
+                    sArray.add(" counterCode like '%" + counter.getCounterCode() + "%'");
+                }
+                if (counter.getWhseCode()!=null&&!"".equals(counter.getWhseCode())) {
+                    sArray.add(" whseCode like '%" + counter.getWhseCode() + "%'");
+                }
+                if (counter.getCreater()!=null&&!"".equals(counter.getCreater())) {
+                    sArray.add(" creater like '%" + counter.getCreater() + "%'");
+                }
+                if (counter.getCounterStatus()!=null&&!"".equals(counter.getCounterStatus())) {
+                    sArray.add(" counterStatus like '%" + counter.getCounterStatus() + "%'");
+                }
+
+            }
+            String individualSearch = "";
+            if (sArray.size() == 1) {
+                individualSearch = sArray.get(0);
+            } else if (sArray.size() > 1) {
+                for (int i = 0; i < sArray.size() - 1; i++) {
+                    individualSearch += sArray.get(i) + " or ";
+                }
+                individualSearch += sArray.get(sArray.size() - 1);
+            }
+        }
+
+        counters = counterService.queryList(userWhses);
         map.put("data",counters);
         return map;
     }
@@ -124,6 +160,14 @@ public class CounterController {
         }
         counterService.save(counter);
         return "redirect:/counter/getCounters";
+    }
+
+    @PostMapping("/counter/isExist")
+    public Boolean isExist(TaskCounter counter) {
+        String code = counter.getCounterCode();
+        String whsecode = counter.getWhseCode();
+        counterService.isExsist(code,whsecode);
+        return counterService.isExsist(code,whsecode);
     }
 
 

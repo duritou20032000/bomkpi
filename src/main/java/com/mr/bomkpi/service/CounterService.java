@@ -22,7 +22,13 @@ public class CounterService {
        return  taskCounterRepository.getOne(Long.valueOf(id));
     }
 
-
+//    public String filterString(){
+//        //获取用户过滤框里的字符
+//        List<String> sArray = new ArrayList<String>();
+//        String fuzzy = request.getParameter("fuzzySearch");
+//
+//        return null;
+//    }
 
     /**
      *  根据所属仓库，查询所有的仓库柜台。
@@ -30,7 +36,6 @@ public class CounterService {
      * @param userWhses
      * @return
      */
-
     public List<TaskCounter> queryList(List<UserWhseVo> userWhses) {
 
         List<TaskCounter> counterRecoders = new ArrayList<>();

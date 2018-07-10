@@ -5,6 +5,7 @@
     <div th:replace="head"></div>
     <!-- DataTables -->
     <link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap.css"/>
+    <link rel="stylesheet" th:href="@{/dist/css/counter-manager.css}"/>
     <title>柜台管理</title>
 </head>
 
@@ -21,42 +22,296 @@
         <section class="content">
             <div class="row">
                 <div class="col-xs-12">
-                    <!--<form th:action="@{/counter/search}" method="POST" th:object="${userWhseVo}">-->
-                        <div style="display:inline;">
-                            <label for="whseCode">仓库</label>
-                            <select style="width: 30%;height: 34px;font-size: 14px; line-height: 1.42857143;color: #555555;background-color: #fff;"
-                                    data-live-search="true"  name="whseCode"  id="whseCode" placeholder="所属仓库编码"  onchange="option()" maxlength="60">
-                            </select>
-                            <button type="button" id="search" onclick="search();"><span><i class="glyphicon glyphicon-search"></i></span></button>
-                            <button type="button" id="clear" onclick="clearSelect();"><span><i class="glyphicon glyphicon-remove"></i></span></button>
+                    <div class="box">
+                        <div style="float:left; position:relative; z-index:9999;height:100%;">
+                            <button type="button" class="btn btn-primary" id="btn-add"><i class="fa fa-plus"></i> 添加</button>
+                            <!--<button type="button" class="btn btn-danger" id="btn-del"><i class="fa fa-remove"></i>批量删除</button>-->
+                            <button type="button" class="btn btn-primary" id="showcol"><i class="fa fa-eye"></i>列段显示/隐藏</button>
+                            <ul class="showul" style=" list-style:none;display:none; position:absolute; left:180px; top:30px; background:#FFFFFF; border:1px solid #ccc; width:200px;">
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="2"/>
+                                    柜台编码
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="3"/>
+                                    柜台名称
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="4"/>
+                                    仓库编码
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="5"/>
+                                    仓库名称
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="6"/>
+                                    柜台状态
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="7"/>
+                                    创建人
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="8"/>
+                                    创建时间
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="9"/>
+                                    最后修改人
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="10"/>
+                                    最后修改时间
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="11"/>
+                                    说明
+                                </li>
+                            </ul>
                         </div>
+                        <div class="pull-right">
+                            <div class="input-append">
+                                <input type="text" placeholder="模糊查询" id="fuzzy-search">
+                                <div class="btn-group">
+                                    <button type="button" class="btn" id="btn-simple-search"><i
+                                            class="fa fa-search"></i></button>
+                                    <button type="button" class="btn" title="高级查询" id="toggle-advanced-search">
+                                        <i class="fa fa-angle-double-down"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <!--<form th:action="@{/counter/search}" method="POST" th:object="${userWhseVo}">-->
+                    <!--<div style="display:inline;">-->
+                        <!--<label for="whseCode">仓库</label>-->
+                        <!--<select style="width: 30%;height: 34px;font-size: 14px; line-height: 1.42857143;color: #555555;background-color: #fff;"-->
+                                <!--data-live-search="true" name="whseCode" id="whseCode" placeholder="所属仓库编码"-->
+                                <!--onchange="option()" maxlength="60">-->
+                        <!--</select>-->
+                        <!--<button type="button" id="search" onclick="search();"><span><i-->
+                                <!--class="glyphicon glyphicon-search"></i></span></button>-->
+                        <!--<button type="button" id="clear" onclick="clearSelect();"><span><i-->
+                                <!--class="glyphicon glyphicon-remove"></i></span></button>-->
+                    <!--</div>-->
                     <!--</form>-->
 
                     <div class="box">
                         <div class="box-header">
-                                <a th:href="@{/counter/form}" title="新增柜台"><span class="glyphicon glyphicon-plus"></span></a>
+                            <!--<a th:href="@{/counter/form}" title="新增柜台"><span class="glyphicon glyphicon-plus"></span></a>-->
+                            <div class="row-fluid" style="display:none;" id="div-advanced-search">
+                                <form class="form-inline well">
+                                    <span>柜台编码:</span>
+                                    <input type="text" class="input-medium" placeholder="柜台编码" id="counterCode-search">
+                                    <span>仓库编码:</span>
+                                    <select name="whseCode" id="whseCode" ></select>
+                                    <!--<input type="text" class="input-medium" placeholder="仓库编码" id="whseCode-search">-->
+                                    <span>创建人:</span>
+                                    <input type="text" class="input-medium" placeholder="创建人" id="creater-search">
+                                    <span>柜台状态:</span>
+                                    <select class="input-small" id="status-search">
+                                        <option value="">全部</option>
+                                        <option value="1">空闲</option>
+                                        <option value="0">占用</option>
+                                    </select>
+                                    <button type="button" class="btn" id="btn-advanced-search"><i class="fa fa-search"></i> 查询</button>
+                                </form>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                        <!--<div class="block info-block" id="user-view">-->
+                            <!--<div class="navbar navbar-inner block-header">-->
+                                <!--<div class="block-title">柜台详情</div>-->
+                                <!--<div class="header-buttons">-->
+                                    <!--<button type="button" class="btn btn-primary" id="btn-view-edit">修改</button>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="block-content info-content clearfix">-->
+                                <!--<div class="row-fluid">-->
+                                    <!--<div class="span4">-->
+                                        <!--<label class="prop-name">柜台编码:</label>-->
+                                        <!--<div class="prop-value" id="counter-code-view"></div>-->
+                                    <!--</div>-->
+                                    <!--<div class="span4">-->
+                                        <!--<label class="prop-name">柜台名称:</label>-->
+                                        <!--<div class="prop-value" id="counter-name-view"></div>-->
+                                    <!--</div>-->
+                                    <!--<div class="span4">-->
+                                        <!--<label class="prop-name">仓库编码:</label>-->
+                                        <!--<div class="prop-value" id="whse-code-edit"></div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="row-fluid">-->
+                                    <!--<div class="span4">-->
+                                        <!--<label class="prop-name">创建人:</label>-->
+                                        <!--<div class="prop-value" id="creater-edit"></div>-->
+                                    <!--</div>-->
+                                    <!--<div class="span4">-->
+                                        <!--<label class="prop-name">柜台状态:</label>-->
+                                        <!--<div class="prop-value" id="counter-status-edit"></div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="row-fluid">-->
+                                    <!--<div class="span4">-->
+                                        <!--<label class="prop-name">创建时间:</label>-->
+                                        <!--<div class="prop-value" id="create-date-edit"></div>-->
+                                    <!--</div>-->
+                                    <!--<div class="span8">-->
+                                        <!--<label class="prop-name">最后修改人:</label>-->
+                                        <!--<div class="prop-value" id="last-modify-edit"></div>-->
+                                    <!--</div>-->
+                                    <!--<div class="span4">-->
+                                        <!--<label class="prop-name">修改时间:</label>-->
+                                        <!--<div class="prop-value" id="last-modify-date-edit"></div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="row-fluid">-->
+                                    <!--<div class="span12">-->
+                                        <!--<label class="prop-name">说明:</label>-->
+                                        <!--<div class="prop-value" id="desc-dedit"></div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <div class="block info-block" id="user-add" style="display:none;">
+                            <div class="navbar navbar-inner block-header">
+                                <div class="block-title">添加柜台</div>
+                                <div class="header-buttons">
+                                    <button type="button" class="btn btn-primary" id="btn-save-add">确定添加</button>
+                                    <button type="button" class="btn btn-cancel">取消</button>
+                                </div>
+                            </div>
+                            <div class="block-content info-content clearfix">
+                                <form id="form-add">
+                                    <div class="control-group">
+                                        <label class="control-label" for="counterCode"><span class="red-asterisk">*</span>柜台编码:</label>
+                                        <div class="controls">
+                                            <input type="text" id="counterCode" name="counterCode">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="counterName">柜台名称:</label>
+                                        <div class="controls">
+                                            <input type="text" id="counterName" name="counterName">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="whseCode"><span class="red-asterisk">*</span>仓库:</label>
+                                        <div class="controls">
+                                            <select name="whseCode" id="whseCode_add" ></select>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="counterStatus">柜台状态:</label>
+                                        <div class="controls">
+                                            <select id="counterStatus" name="counterStatus">
+                                                <option value="1" selected>空闲</option>
+                                                <option value="0">占用</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!--<div class="control-group">-->
+                                        <!--<label class="control-label" for="start-date-add">入职时间:</label>-->
+                                        <!--<div class="controls">-->
+                                            <!--<input type="text" id="start-date-add" name="start-date-add">-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+
+                                    <div class="control-group">
+                                        <label class="control-label" for="desc">说明:</label>
+                                        <div class="controls">
+                                            <input type="text" class="xxxlarge" id="desc" name="description">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="block info-block" id="user-edit" style="display:none;">
+                            <div class="navbar navbar-inner block-header">
+                                <div class="block-title">修改柜台:<span id="title-edit"></span></div>
+                                <div class="header-buttons">
+                                    <button type="button" class="btn btn-primary" id="btn-save-edit">保存更改</button>
+                                    <button type="button" class="btn btn-cancel">取消</button>
+                                </div>
+                            </div>
+                            <div class="block-content info-content clearfix">
+                                <form id="form-edit">
+                                    <div class="control-group" style="display: none;">
+                                            <label class="control-label" for="whse_code_edit"><span class="red-asterisk">*</span>ID:</label>
+                                        <div class="controls">
+                                            <input type="text" id="id_edit" name="id_edit" disabled="true">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="counter_code_edit"><span class="red-asterisk">*</span>柜台编码:</label>
+                                        <div class="controls">
+                                            <input type="text" id="counter_code_edit" name="counter_code_edit">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="counter_name_edit">柜台名称:</label>
+                                        <div class="controls">
+                                            <input type="text" id="counter_name_edit" name="counter_name_edit">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="whse_code_edit"><span class="red-asterisk">*</span>仓库编码:</label>
+                                        <div class="controls">
+                                            <input type="text" id="whse_code_edit" name="whse_code_edit">
+                                        </div>
+                                    </div>
+                                    <div class="control-group" style="display: none;">
+                                        <label class="control-label" for="counter_name_edit">仓库名称:</label>
+                                        <div class="controls">
+                                            <input type="text" id="counter_name_edit" name="counter_name_edit">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="counter_status_edit">柜台状态:</label>
+                                        <div class="controls">
+                                            <select id="counter_status_edit" name="counter_status_edit">
+                                                <option value="1" selected>空闲</option>
+                                                <option value="0">占用</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="desc">说明:</label>
+                                        <div class="controls">
+                                            <input type="text" class="xxxlarge" id="desc_edit" name="desc_edit">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
 
                         <div class="box-body">
-                            <table id="dataTable" class="table table-bordered table-striped">
-                                <thead>
-                                <tr>
-                                    <th>序号</th>
-                                    <th>柜台编码</th>
-                                    <th>柜台名称</th>
-                                    <th>仓库编码</th>
-                                    <th>仓库名称</th>
-                                    <th>柜台状态</th>
-                                    <th>创建人</th>
-                                    <th>创建时间</th>
-                                    <th>最后修改人</th>
-                                    <th>最后修改时间</th>
-                                    <th>说明</th>
-                                    <th>修改</th>
-                                </tr>
-                                </thead>
-                                <!--<tbody>-->
-                                <!--<tr th:each="counter:${counters}">-->
+                            <div  id="div-table-container">
+                                <table id="table-counter" class="table table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>序号</th>
+                                        <th>柜台编码</th>
+                                        <th>柜台名称</th>
+                                        <th>仓库编码</th>
+                                        <th>仓库名称</th>
+                                        <th>柜台状态</th>
+                                        <th>创建人</th>
+                                        <th>创建时间</th>
+                                        <th>最后修改人</th>
+                                        <th>最后修改时间</th>
+                                        <th>说明</th>
+                                        <th>修改</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!--<tr th:each="counter:${counters}">-->
                                     <!--<td th:text="${counter.id}" hidden="true">1</td>-->
                                     <!--<td th:text="${counterStat.count}">1</td>-->
                                     <!--<td th:text="${counter.counterCode}">code</td>-->
@@ -70,12 +325,12 @@
                                     <!--<td th:text="${#dates.format(counter.lastModifyDate,'yyyy-MM-dd HH:mm:ss')}">modifydate</td>-->
                                     <!--<td th:text="${counter.description}">name</td>-->
                                     <!--<td style="text-align: center">-->
-                                        <!--<a th:href="@{/counter/form(id=${counter.id})}"><span class="glyphicon glyphicon-edit" title="编辑"></span></a>-->
+                                    <!--<a th:href="@{/counter/form(id=${counter.id})}"><span class="glyphicon glyphicon-edit" title="编辑"></span></a>-->
                                     <!--</td>-->
-
-                                <!--</tr>-->
-                                <!--</tbody>-->
-                            </table>
+                                    <!--</tr>-->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <!-- /.box-body -->
                     </div>
@@ -92,142 +347,8 @@
     <div th:replace="footer"></div>
 </div>
 <div th:replace="script"></div>
-<script>
-    $(function () {
-        $('#dataTable').DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "language": {
-                "sProcessing": "处理中...",
-                "sLengthMenu": "显示 _MENU_ 项结果",
-                "sZeroRecords": "没有匹配结果",
-                "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
-                "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
-                "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
-                "sInfoPostFix": "",
-                "sSearch": "搜索:",
-                "sUrl": "",
-                "sEmptyTable": "表中数据为空",
-                "sLoadingRecords": "载入中...",
-                "sInfoThousands": ",",
-                "oPaginate": {
-                    "sFirst": "首页",
-                    "sPrevious": "上页",
-                    "sNext": "下页",
-                    "sLast": "末页"
-                },
-                "oAria": {
-                    "sSortAscending": ": 以升序排列此列",
-                    "sSortDescending": ": 以降序排列此列"
-                }
-            },
-            "ajax":{
-                url:"/counter/getCounters",
-                type:"POST",
-                data:{
-                    username:$("#username").text()
-                    },
-            },
-            "columns":[
-                {
-                    "data" : "id",
-                    "sClass" : "center"
-                },
-                {
-                    "data" : "counterCode"
-                },
-                {
-                    "data" : "counterName"
-                },
-                {
-                    "data" : "whseCode"
-                },
-                {
-                    "data" : "whseName"
-                },
-                {
-                    "data" : "counterStatus",
-                    render: function (data, type, row, meta) {
-                        var str = "";
-                        if(data==1){
-                            str = "空闲";
-                        }else{
-                            str = "使用中";
-                        }
-                        return str;
-                    }
-                },
-                {
-                    "data" : "creater"
-                },
-                {
-                    "data" : "creationDate",
-                    render: function (data, type, row, meta) {
-                        if(data != null){
-                            return new Date(Date.parse(data)).Format("yyyy-MM-dd hh:mm:ss");
-                        }
-                        return null;
-                    }
-
-                },
-                {
-                    "data" : "lastModifyName"
-                },
-                {
-                    "data" : "lastModifyDate",
-                    render: function (data, type, row, meta) {
-                        if(data != null) {
-                            return new Date(Date.parse(data)).Format("yyyy-MM-dd hh:mm:ss");
-                        }
-                        return null;
-                    }
-                },
-                {
-                    "data" : "description"
-                },
-                {
-                    "data": null,
-                    "defaultContent": "<button><span class=\"glyphicon glyphicon-edit\" title=\"编辑\"></button>"
-                }
-            ]
-        });
-
-        $('#dataTable tbody').on( 'click', 'button', function () {
-            console.log("test");
-        } );
-    });
-    Date.prototype.Format = function (fmt) { //author: meizz
-        var o = {
-            "M+": this.getMonth() + 1,
-            //月份
-            "d+": this.getDate(),
-            //日
-            "h+": this.getHours(),
-            //小时
-            "m+": this.getMinutes(),
-            //分
-            "s+": this.getSeconds(),
-            //秒
-            "q+": Math.floor((this.getMonth() + 3) / 3),
-            //季度
-            "S": this.getMilliseconds() //毫秒
-        };
-        if (/(y+)/.test(fmt)) {
-            fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-        }
-        for (var k in o) {
-            if (new RegExp("(" + k + ")").test(fmt)) {
-                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-            }
-        }
-        return fmt;
-    };
-</script>
+<script th:src="@{/js/constant.js}"></script>
 <script th:src="@{/js/list-page.js}"></script>
-<script th:src="@{/js/counter.js}"></script>
+<script th:src="@{/js/counter-manager.js}"></script>
 </body>
 </html>
