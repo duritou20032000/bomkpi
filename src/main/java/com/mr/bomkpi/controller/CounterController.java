@@ -70,37 +70,6 @@ public class CounterController {
         return map;
     }
 
-    /**
-     * 根据仓库搜索
-     */
-    @PostMapping("/counter/search")
-    public Map<String,List<TaskCounter>> search(String whseCode) {
-        Map<String,List<TaskCounter>> map = new HashMap<>();
-        List<TaskCounter> counters = counterService.findAllByWhseCode(whseCode);
-        map.put("data",counters);
-        return map;
-    }
-
-
-    /**
-     * 1.根据用户所属的仓库显示仓库名称
-     * 2.多个或没有，默认显示第一个。
-     *
-     * @param model
-     * @return
-     */
-    @GetMapping("/counter/form")
-    public String addCounter(Model model, String id, Principal principal) {
-        String uname = principal.getName();
-        if (!StringUtils.isEmpty(uname)) {
-            //得到用户仓库，表中没有，这个功能暂时放下
-        }
-        if (!StringUtils.isEmpty(id)) {
-            TaskCounter counter = counterService.readById(id);
-            model.addAttribute("counter", counter);
-        }
-        return "/counter/form";
-    }
 
     /**
      * 保存仓库的柜台信息
@@ -137,6 +106,37 @@ public class CounterController {
         return counterService.isExsist(code,whsecode);
     }
 
+    /**
+     * 根据仓库搜索
+     */
+    @PostMapping("/counter/search")
+    public Map<String,List<TaskCounter>> search(String whseCode) {
+        Map<String,List<TaskCounter>> map = new HashMap<>();
+        List<TaskCounter> counters = counterService.findAllByWhseCode(whseCode);
+        map.put("data",counters);
+        return map;
+    }
+
+
+    /**
+     * 1.根据用户所属的仓库显示仓库名称
+     * 2.多个或没有，默认显示第一个。
+     *
+     * @param model
+     * @return
+     */
+    @GetMapping("/counter/form")
+    public String addCounter(Model model, String id, Principal principal) {
+        String uname = principal.getName();
+        if (!StringUtils.isEmpty(uname)) {
+            //得到用户仓库，表中没有，这个功能暂时放下
+        }
+        if (!StringUtils.isEmpty(id)) {
+            TaskCounter counter = counterService.readById(id);
+            model.addAttribute("counter", counter);
+        }
+        return "/counter/form";
+    }
 
 
 

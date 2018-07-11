@@ -3,6 +3,7 @@ package com.mr.bomkpi.service;
 import com.mr.bomkpi.entity.Task;
 import com.mr.bomkpi.entity.TaskCounter;
 import com.mr.bomkpi.entity.TaskOrder;
+import com.mr.bomkpi.entity.UserWhseVo;
 import com.mr.bomkpi.repository.TaskCounterRepository;
 import com.mr.bomkpi.repository.TaskOrderRepository;
 import com.mr.bomkpi.repository.TaskRepository;
@@ -11,9 +12,15 @@ import com.mr.bomkpi.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +35,58 @@ public class OrderService {
     private TaskOrderRepository orderRepository;
     @Autowired
     private TaskCounterRepository counterRepository;
+
+
+    /**
+     * 根据条件查找，搜索，包含模糊搜索
+     * 主要是拼接字符串SQL来进行查找
+     *
+     * 这个这个主要使用JPA2.0 的criteriaBuilder 的方法来进行，标准的查找方式很好。
+     *
+     */
+    public List<TaskOrder> queryListOnCondition(TaskOrder order, List<UserWhseVo> userWhses, String fuzzy, String fuzzySearch) {
+
+        List<TaskOrder> orders = orderRepository.findAll(new Specification<TaskOrder>() {
+            @Override
+            public Predicate toPredicate(Root<TaskOrder> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> list = new ArrayList<Predicate>();
+
+                if(userWhses.size() > 0 && userWhses != null) {
+                    CriteriaBuilder.In<Object> in = criteriaBuilder.in(root.get("whseCode"));
+                    for (UserWhseVo userWhs : userWhses) {
+                        in.value(userWhs.getWhseCode());
+                    }
+                    list.add(in);
+                }
+
+                if("true".equals(fuzzySearch)){
+                    if(fuzzy != null && !"".equals(fuzzy)){
+                        Predicate p1 = criteriaBuilder.like(root.get("orderCode").as(String.class), "%" + fuzzy + "%");
+                        Predicate p2 = criteriaBuilder.or(criteriaBuilder.like(root.get("whseCode").as(String.class), "%" + fuzzy + "%"),p1);
+                        Predicate p3 = criteriaBuilder.or(criteriaBuilder.like(root.get("productCode").as(String.class), "%" + fuzzy + "%"),p2);
+                        list.add(p3);
+                    }
+                }else{
+                    if (order.getOrderCode() != null && !"".equals(order.getOrderCode())) {
+                        Predicate p4 = criteriaBuilder.like(root.get("orderCode").as(String.class), "%" + order.getOrderCode() + "%");
+                        list.add(p4);
+                    }
+                    if (order.getWhseCode() != null && !"".equals(order.getWhseCode())) {
+                        Predicate p5 = criteriaBuilder.like(root.get("whseCode").as(String.class), "%" + order.getWhseCode() + "%");
+                        list.add(p5);
+                    }
+                    if (order.getProductCode() != null && !"".equals(order.getProductCode())) {
+                        Predicate p6 = criteriaBuilder.like(root.get("productCode").as(String.class), "%" + order.getProductCode() + "%");
+                        list.add(p6);
+                    }
+
+                }
+                Predicate[] p = list.toArray(new Predicate[0]);
+                return criteriaBuilder.and(p);
+            }
+        });
+        return orders;
+    }
 
     /**
      * 一般都是用1次分配完成任务

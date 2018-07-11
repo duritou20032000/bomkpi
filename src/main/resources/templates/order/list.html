@@ -1,82 +1,301 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <div th:replace="head"></div>
     <!-- DataTables -->
     <link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap.css"/>
-    <title>加工单管理</title>
+    <link rel="stylesheet" th:href="@{/dist/css/counter-manager.css}"/>
+    <title>订单管理</title>
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini ">
 <div class="wrapper">
-
     <div th:replace="header"></div>
     <div th:replace="sidebar"></div>
-
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-
 
         <!-- Main content -->
         <section class="content">
             <div class="row">
                 <div class="col-xs-12">
-
                     <div class="box">
+                        <div style="float:left; position:relative; z-index:9999;height:100%;">
+                            <button type="button" class="btn btn-primary" id="btn-add"><i class="fa fa-plus"></i> 添加</button>
+                            <!--<button type="button" class="btn btn-danger" id="btn-del"><i class="fa fa-remove"></i>批量删除</button>-->
+                            <button type="button" class="btn btn-primary" id="showcol"><i class="fa fa-eye"></i>列段显示/隐藏</button>
+                            <ul class="showul" style=" list-style:none;display:none; position:absolute; left:180px; top:30px; background:#FFFFFF; border:1px solid #ccc; width:200px;">
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="2"/>
+                                    加工单编码
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="3"/>
+                                    仓库编码
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="4"/>
+                                    仓库名称
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="5"/>
+                                    加工单类型
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="6"/>
+                                    产成品预期总数量
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="7"/>
+                                    产成品单位
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="8"/>
+                                    最后期限
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="9"/>
+                                    产成品编码
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="10"/>
+                                    产成品名称
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="11"/>
+                                    同步时间
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="12"/>
+                                    加工任务完成时间
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="13"/>
+                                    关单人
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="14"/>
+                                    关单时间
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="15"/>
+                                    订单状态
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="pull-right">
+                            <div class="input-append">
+                                <input type="text" placeholder="模糊查询(柜台仓库创建人)" id="fuzzy-search">
+                                <div class="btn-group">
+                                    <button type="button" class="btn" id="btn-simple-search"><i
+                                            class="fa fa-search"></i></button>
+                                    <button type="button" class="btn" title="高级查询" id="toggle-advanced-search">
+                                        <i class="fa fa-angle-double-down"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                </div>
+            </div>
+<!--搜索-->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <div class="row-fluid" style="display:none;" id="div-advanced-search">
+                                <form class="form-inline well">
+                                    <span>加工单编码:</span>
+                                    <input type="text" class="input-medium" placeholder="加工单编码" id="orderCode-search">
+                                    <span>仓库编码:</span>
+                                    <select name="whseCode-search" id="whseCode-search" ></select>
+                                    <span>加工单类型:</span>
+                                    <select class="input-small" id="orderType-search">
+                                        <option value="">全部</option>
+                                        <option value="1">组装</option>
+                                        <option value="0">拆零</option>
+                                    </select>
+                                    <span>产成品编码:</span>
+                                    <input type="text" class="input-medium" placeholder="产成品编码" id="productCode-search">
+                                    <span>订单状态:</span>
+                                    <select class="input-small" id="pluginStatus-search">
+                                        <option value="">全部</option>
+                                        <option value="1">未分配</option>
+                                        <option value="2">分配中</option>
+                                        <option value="3">分配完</option>
+                                        <option value="4">已完成</option>
+                                    </select>
+                                    <button type="button" class="btn" id="btn-advanced-search"><i class="fa fa-search"></i> 查询</button>
+                                </form>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+            <!--查看-->
+                        <div class="block info-block" id="user-view">
+                            <div class="navbar navbar-inner block-header">
+                                <div class="block-title">订单详情</div>
+                                <div class="header-buttons">
+                                    <button type="button" class="btn btn-primary" id="btn-view-edit">修改</button>
+                                </div>
+                            </div>
+                            <div class="block-content info-content clearfix">
+                                <div class="row-fluid">
+                                    <div class="span4">
+                                        <label class="prop-name">加工单编码:</label>
+                                        <div class="prop-value" id="counter-code-view"></div>
+                                    </div>
+                                    <div class="span4">
+                                        <label class="prop-name">仓库编码:</label>
+                                        <div class="prop-value" id="counter-name-view"></div>
+                                    </div>
+                                    <div class="span4">
+                                        <label class="prop-name">仓库名称:</label>
+                                        <div class="prop-value" id="whse-code-view"></div>
+                                    </div>
+                                </div>
+                                <div class="row-fluid">
+                                    <div class="span12">
+                                        <label class="prop-name">说明:</label>
+                                        <div class="prop-value" id="desc-view"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="block info-block" id="user-add" style="display:none;">
+                            <div class="navbar navbar-inner block-header">
+                                <div class="block-title">添加加工单</div>
+                                <div class="header-buttons">
+                                    <button type="button" class="btn btn-primary" id="btn-save-add">确定添加</button>
+                                    <button type="button" class="btn btn-cancel">取消</button>
+                                </div>
+                            </div>
+            <!--添加-->
+                            <div class="block-content info-content clearfix">
+                                <form id="form-add">
+                                    <div class="control-group">
+                                        <label class="control-label" for="whseCode_add"><span class="red-asterisk">*</span>仓库编码:</label>
+                                        <div class="controls">
+                                            <select name="whseCode" id="whseCode_add" ></select>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="orderCode-add"><span class="red-asterisk">*</span>订单编码:</label>
+                                        <div class="controls">
+                                            <input type="text" id="orderCode-add" name="orderCode">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="productCode-add"><span class="red-asterisk">*</span>成品编码:</label>
+                                        <div class="controls">
+                                            <input type="text" id="productCode-add" name="productCode">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="productCode-add"><span class="red-asterisk">*</span>加工类型:</label>
+                                        <div class="controls">
+                                            <select class="input-small" id="orderType-add" name="orderType">
+                                                <option value="1">组装</option>
+                                                <option value="0">拆零</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="productCount-add"><span class="red-asterisk">*</span>产成品预期总数量:</label>
+                                        <div class="controls">
+                                            <input type="text" id="productCount-add" name="productCount">
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group">
+                                        <label class="control-label" for="productName-add">产成品名称:</label>
+                                        <div class="controls">
+                                            <input type="text" id="productName-add" name="productName">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="productUnit-add"><span class="red-asterisk">*</span>产成品单位:</label>
+                                        <div class="controls">
+                                            <input type="text" id="productUnit-add" name="productUnit">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="deadline-add">最后期限:</label>
+                                        <div class="controls">
+                                            <input type="text" id="deadline-add" name="deadline">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+            <!--编辑-->
+                        <div class="block info-block" id="user-edit" style="display:none;">
+                            <div class="navbar navbar-inner block-header">
+                                <div class="block-title">订单拆分成任务:<span id="title-edit"></span></div>
+                                <div class="header-buttons">
+                                    <button type="button" class="btn btn-primary" id="btn-save-edit">保存更改</button>
+                                    <button type="button" class="btn btn-cancel">取消</button>
+                                </div>
+                            </div>
+                            <div class="block-content info-content clearfix">
+                                <form id="form-edit">
+                                    <div class="control-group" style="display: none;">
+                                            <label class="control-label" for="whse_code_edit"><span class="red-asterisk">*</span>ID:</label>
+                                        <div class="controls">
+                                            <input type="text" id="id_edit" name="id_edit" disabled="true">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="orderCode_edit"><span class="red-asterisk">*</span>订单编码:</label>
+                                        <div class="controls">
+                                            <input type="text" id="orderCode_edit" name="orderCode">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="whseCode_edit">仓库编码:</label>
+                                        <div class="controls">
+                                            <input type="text" id="whseCode_edit" name="whseCode">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="whse_code_edit"><span class="red-asterisk">*</span>仓库编码:</label>
+                                        <div class="controls">
+                                            <input type="text" id="whse_code_edit" name="whse_code_edit">
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+
                         <div class="box-body">
-                            <table id="dataTable" class="table table-bordered table-striped">
-                                <thead>
-                                <tr>
-                                    <th>序号</th>
-
-                                    <th>加工单编码</th>
-                                    <th>仓库编码</th>
-                                    <th>仓库名称</th>
-                                    <th>加工单类型</th>
-                                    <th>产成品预期总数量</th>
-                                    <th>产成品单位</th>
-                                    <th>最后期限</th>
-                                    <th>产成品编码</th>
-                                    <th>产成品名称</th>
-                                    <th>同步时间</th>
-                                    <th>加工任务完成时间</th>
-                                    <th>关单人</th>
-                                    <th>关单时间</th>
-                                    <th>订单状态</th>
-                                    <th>拆单</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="order:${orders}">
-                                    <td th:text="${order.id}" hidden="true">1</td>
-                                    <td th:text="${orderStat.count}">1</td>
-
-                                    <td th:text="${order.orderCode}">worksheetCode</td>
-                                    <td th:text="${order.whseCode}">whseCode</td>
-                                    <td th:text="${order.whseName}">whseName</td>
-                                    <td th:text="${order.orderType}==1?'组装':'拆零'">worksheetType</td>
-                                    <td th:text="${order.productCount}">productCount</td>
-                                    <td th:text="${order.productUnit}">productUnit</td>
-                                    <td th:text="${#dates.format(order.deadline,'yyyy-MM-dd HH:mm:ss')}">2018-05-25</td>
-                                    <td th:text="${order.productCode}">productCode</td>
-                                    <td th:text="${order.productName}">productName</td>
-                                    <td th:text="${#dates.format(order.syncDate,'yyyy-MM-dd HH:mm:ss')}">2018-05-25</td>
-                                    <td th:text="${#dates.format(order.finishDate,'yyyy-MM-dd HH:mm:ss')}">2018-05-25</td>
-                                    <td th:text="${order.closerName}">closerName</td>
-                                    <td th:text="${order.closeDate}">closeDate</td>
-                                    <td th:switch="${order.pluginStatus}" id="status">
-                                        <P th:case="'1'">未分配</P>
-                                        <P th:case="'2'">分配中</P>
-                                        <P th:case="'3'">分配完</P>
-                                        <P th:case="'4'">已完成</P>
-                                    </td>
-                                    <td style="text-align: center">
-                                        <a th:href="@{/order/form(id=${order.id})}"><span class="glyphicon glyphicon-edit" title="拆单"></span></a>
-                                    </td>
-
-                                </tr>
-                                </tbody>
-                            </table>
+                            <div  id="div-table-container">
+                                <table id="table-counter" class="table table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>序号</th>
+                                        <th>加工单编码</th>
+                                        <th>仓库编码</th>
+                                        <th>仓库名称</th>
+                                        <th>加工单类型</th>
+                                        <th>产成品预期总数量</th>
+                                        <th>产成品单位</th>
+                                        <th>最后期限</th>
+                                        <th>产成品编码</th>
+                                        <th>产成品名称</th>
+                                        <th>同步时间</th>
+                                        <th>加工任务完成时间</th>
+                                        <th>关单人</th>
+                                        <th>关单时间</th>
+                                        <th>订单状态</th>
+                                        <th>拆单</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <!-- /.box-body -->
                     </div>
@@ -90,24 +309,10 @@
     </div>
     <!-- /.content-wrapper -->
 
-
+    <div th:replace="footer"></div>
 </div>
-
 <div th:replace="script"></div>
-
-<!-- page script -->
-<script>
-    $(function () {
-        $('#dataTable').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false
-        });
-    });
-</script>
-<!--<script th:src="@{/js/list-page.js}"></script>-->
+<script th:src="@{/js/constant.js}"></script>
+<script th:src="@{/js/order-manager.js}"></script>
 </body>
 </html>

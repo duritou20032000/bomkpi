@@ -60,11 +60,11 @@ public class HomeController {
     }
     @GetMapping("/task/person")
     public String taskPersonList() {
-        return "/task/person/list";
+        return "/single/list";
     }
     @GetMapping("/task/team")
     public String taskTeamList() {
-        return "/task/team/list";
+        return "/team/list";
     }
     @GetMapping("/kpi")
     public String kpiList() {
@@ -72,7 +72,7 @@ public class HomeController {
     }
     @GetMapping("/kpi/person")
     public String kpiPersonList() {
-        return "/kpi/person/list";
+        return "/user/list";
     }
 
 }

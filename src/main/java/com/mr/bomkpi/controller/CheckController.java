@@ -3,12 +3,13 @@ package com.mr.bomkpi.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class CheckController {
 
     @GetMapping("/check/getChecks")
-    public String getChecks(Model model){
+    public String getChecks(){
         return "/check/list";
     }
 

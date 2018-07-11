@@ -1,11 +1,9 @@
 package com.mr.bomkpi.controller;
 
-import com.mr.bomkpi.entity.TaskCounter;
-import com.mr.bomkpi.entity.TaskOrder;
-import com.mr.bomkpi.repository.TaskCounterRepository;
-import com.mr.bomkpi.repository.TaskOrderRepository;
-import com.mr.bomkpi.repository.TaskRepository;
+import com.mr.bomkpi.entity.*;
+import com.mr.bomkpi.repository.*;
 import com.mr.bomkpi.service.OrderService;
+import com.mr.bomkpi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,14 +11,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Administrator
  */
 @RestController
 public class OrderController {
+    @Autowired
+    private UserRepository userRepository;
 
+    @Autowired
+    private UserWhseVoRepository userWhseVoRepository;
     @Autowired
     private TaskCounterRepository counterRepository;
     @Autowired
@@ -28,14 +33,26 @@ public class OrderController {
     @Autowired
     private TaskRepository taskRepository;
     @Autowired
+    private WhseRepository whseRepository;
+    @Autowired
     private OrderService orderService;
 
-    @GetMapping("/order/getOrders")
-    public String getOrders(Model model) {
-        // 需要重新探讨所需的业务
-        List<TaskOrder> orders = orderRepository.findAll();
-        model.addAttribute("orders", orders);
-        return "order/list";
+    @PostMapping("/order/getOrders")
+    public Map<String,List<TaskOrder>> getOrders(TaskOrder order,Principal principal,String fuzzy,String fuzzySearch) {
+//        查找该用户所属仓库下的所有订单
+        String username = principal.getName();
+        Map<String, List<TaskOrder>> map = new HashMap<>();
+        List<TaskOrder> orders = new ArrayList<>();
+        List<UserWhseVo> userWhses = new ArrayList<>();
+        if (!StringUtil.isEmptyOrNull(username)) {
+            User user = userRepository.findByUsername(username);
+            userWhses = userWhseVoRepository.findAllByUserId(user.getUserId());
+        }
+
+        orders = orderService.queryListOnCondition(order,userWhses,fuzzy,fuzzySearch);
+        map.put("data",orders);
+        return map;
+
     }
 
     /**
@@ -70,6 +87,20 @@ public class OrderController {
         orderService.saveTasks(order,principal);
         return "task/list";
     }
+
+    /**
+     * 测试添加订单
+     * @param order
+     */
+    @PostMapping("/order/save")
+    public void save(TaskOrder order){
+        Whse whse = whseRepository.findByWhseCode(order.getWhseCode());
+        if(whse != null){
+            order.setWhseName(whse.getWhseName());
+        }
+        orderRepository.save(order);
+    }
+
 
 
 }

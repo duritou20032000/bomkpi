@@ -17,8 +17,4 @@ public interface TaskCounterRepository extends JpaRepository<TaskCounter,Long>,J
     TaskCounter readByCounterCodeAndWhseCode(String counterCode, String whseCode);
     List<TaskCounter> findAllByWhseCode(String whseCode);
 
-    //高级动态查询
-
-
-
 }
