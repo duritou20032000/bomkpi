@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="head"></div>
+    <!-- DataTables -->
+    <link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap.css"/>
+    <title>任务管理</title>
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini ">
+<div class="wrapper">
+
+    <div th:replace="header"></div>
+    <div th:replace="sidebar"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+
+                    <!--<div class="box">-->
+                        <!--<div class="box-header">-->
+                            <!--<a th:href="@{/task/form}" title="新增任务"><span class="glyphicon glyphicon-plus"></span></a>-->
+                        <!--</div>-->
+
+                        <div class="box-body">
+                            <table id="dataTable" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>序号</th>
+
+                                    <th>任务编码</th>
+                                    <th>加工单号</th>
+                                    <th>柜台编码</th>
+                                    <th>柜台名称</th>
+                                    <th>产成品编码</th>
+                                    <th>产成品名称</th>
+                                    <th>任务数量</th>
+                                    <th>产成品单位</th>
+                                    <th>任务创建人</th>
+                                    <th>任务创建时间</th>
+                                    <th>任务领取人</th>
+                                    <th>任务领取时间</th>
+                                    <th>状态</th>
+                                    <th>编辑</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="task:${tasks}">
+                                    <td th:text="${task.id}" hidden="true">1</td>
+                                    <td th:text="${taskStat.count}">1</td>
+
+                                    <td th:text="${task.taskCode}">taskCode</td>
+                                    <td th:text="${task.orderCode}">orderCode</td>
+                                    <td th:text="${task.counterCode}">counterCode</td>
+                                    <td th:text="${task.counterName}">counterName</td>
+                                    <td th:text="${task.productCode}">productCode</td>
+                                    <td th:text="${task.productName}">productName</td>
+                                    <td th:text="${task.productCount}">productCount</td>
+                                    <td th:text="${task.productUnit}">productUnit</td>
+                                    <td th:text="${task.createrName}">createrName</td>
+                                    <td th:text="${#dates.format(task.creationDate,'yyyy-MM-dd HH:MM:SS')}">2018-05-25</td>
+                                    <td th:text="${task.requester}">requester</td>
+                                    <td th:text="${#dates.format(task.requesterDate,'yyyy-MM-dd HH:MM:SS')}">2018-05-25</td>
+                                    <td th:switch="${task.taskStatus}" id="status">
+                                        <P th:case="'1'">未领取</P>
+                                        <P th:case="'2'">已领取</P>
+                                        <P th:case="'3'">已完成</P>
+                                    </td>
+                                    <td th:text="${task.description}">description</td>
+                                    <td style="text-align: center">
+                                        <a th:href="@{/task/form(id=${task.id})}"><span class="glyphicon glyphicon-edit" title="编辑"></span></a>
+                                    </td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+
+</div>
+
+<div th:replace="script"></div>
+
+<!-- page script -->
+<script>
+    $(function () {
+        $('#dataTable').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false
+        });
+    });
+</script>
+<!--<script th:src="@{/js/list-page.js}"></script>-->
+</body>
+</html>

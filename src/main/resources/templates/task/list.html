@@ -1,84 +1,193 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <div th:replace="head"></div>
     <!-- DataTables -->
     <link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap.css"/>
+    <link rel="stylesheet" th:href="@{/dist/css/counter-manager.css}"/>
     <title>任务管理</title>
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini ">
 <div class="wrapper">
-
     <div th:replace="header"></div>
     <div th:replace="sidebar"></div>
-
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-
 
         <!-- Main content -->
         <section class="content">
             <div class="row">
                 <div class="col-xs-12">
+                    <div class="box">
+                        <div style="float:left; position:relative; z-index:9999;height:100%;">
+                            <button type="button" class="btn btn-primary" id="btn-add"><i class="fa fa-plus"></i> 添加</button>
+                            <!--<button type="button" class="btn btn-danger" id="btn-del"><i class="fa fa-remove"></i>批量删除</button>-->
+                            <button type="button" class="btn btn-primary" id="showcol"><i class="fa fa-eye"></i>列段显示/隐藏</button>
+                            <ul class="showul" style=" list-style:none;display:none; position:absolute; left:180px; top:30px; background:#FFFFFF; border:1px solid #ccc; width:200px;">
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="2"/>
+                                    任务编码
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="3"/>
+                                    加工单号
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="4"/>
+                                    柜台编码
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="5"/>
+                                    柜台名称
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="6"/>
+                                    产成品编码
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="7"/>
+                                    产成品名称
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="8"/>
+                                    任务数量
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="9"/>
+                                    产成品单位
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="10"/>
+                                    任务创建人
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="11"/>
+                                    任务创建时间
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="12"/>
+                                    任务领取人
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="13"/>
+                                    任务领取时间
+                                </li>
+                                <li>
+                                    <input type="checkbox" class="toggle-vis" data-column="14"/>
+                                    状态
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="pull-right">
+                            <div class="input-append">
+                                <input type="text" placeholder="模糊查询(柜台仓库创建人)" id="fuzzy-search">
+                                <div class="btn-group">
+                                    <button type="button" class="btn" id="btn-simple-search"><i
+                                            class="fa fa-search"></i></button>
+                                    <button type="button" class="btn" title="高级查询" id="toggle-advanced-search">
+                                        <i class="fa fa-angle-double-down"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                </div>
+            </div>
+<!--搜索-->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <div class="row-fluid" style="display:none;" id="div-advanced-search">
+                                <form class="form-inline well">
+                                    <span>任务编码:</span>
+                                    <input type="text" class="input-medium" placeholder="加工单编码" id="taskCode-search">
+                                    <span>加工单号:</span>
+                                    <input type="text" class="input-medium" placeholder="加工单编码" id="orderCode-search">
+                                    <span>柜台编码:</span>
+                                    <input type="text" class="input-medium" placeholder="加工单编码" id="counterCode-search">
+                                    <span>产成品编码:</span>
+                                    <select name="productCode-search" id="productCode-search" ></select>
+                                    <span>状态:</span>
+                                    <select class="input-small" id="taskStatus-search">
+                                        <option value="1">未领取</option>
+                                        <option value="2">已领取</option>
+                                        <option value="3">已完成</option>
+                                    </select>
+                                    <button type="button" class="btn" id="btn-advanced-search"><i class="fa fa-search"></i> 查询</button>
+                                </form>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+            <!--编辑-->
+                        <div class="block info-block" id="user-edit" style="display:none;">
+                            <div class="navbar navbar-inner block-header">
+                                <div class="block-title">订单拆分成任务:<span id="title-edit"></span></div>
+                                <div class="header-buttons">
+                                    <button type="button" class="btn btn-primary" id="btn-save-edit">保存更改</button>
+                                    <button type="button" class="btn btn-cancel">取消</button>
+                                </div>
+                            </div>
+                            <div class="block-content info-content clearfix">
+                                <form id="form-edit">
+                                    <div class="control-group" style="display: none;">
+                                            <label class="control-label" for="whse_code_edit"><span class="red-asterisk">*</span>ID:</label>
+                                        <div class="controls">
+                                            <input type="text" id="id_edit" name="id_edit" disabled="true">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="orderCode_edit"><span class="red-asterisk">*</span>订单编码:</label>
+                                        <div class="controls">
+                                            <input type="text" id="orderCode_edit" name="orderCode">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="whseCode_edit">仓库编码:</label>
+                                        <div class="controls">
+                                            <input type="text" id="whseCode_edit" name="whseCode">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="whse_code_edit"><span class="red-asterisk">*</span>仓库编码:</label>
+                                        <div class="controls">
+                                            <input type="text" id="whse_code_edit" name="whse_code_edit">
+                                        </div>
+                                    </div>
 
-                    <!--<div class="box">-->
-                        <!--<div class="box-header">-->
-                            <!--<a th:href="@{/task/form}" title="新增任务"><span class="glyphicon glyphicon-plus"></span></a>-->
-                        <!--</div>-->
+                                </form>
+                            </div>
+                        </div>
 
                         <div class="box-body">
-                            <table id="dataTable" class="table table-bordered table-striped">
-                                <thead>
-                                <tr>
-                                    <th>序号</th>
-
-                                    <th>任务编码</th>
-                                    <th>加工单号</th>
-                                    <th>柜台编码</th>
-                                    <th>柜台名称</th>
-                                    <th>产成品编码</th>
-                                    <th>产成品名称</th>
-                                    <th>任务数量</th>
-                                    <th>产成品单位</th>
-                                    <th>任务创建人</th>
-                                    <th>任务创建时间</th>
-                                    <th>任务领取人</th>
-                                    <th>任务领取时间</th>
-                                    <th>状态</th>
-                                    <th>编辑</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="task:${tasks}">
-                                    <td th:text="${task.id}" hidden="true">1</td>
-                                    <td th:text="${taskStat.count}">1</td>
-
-                                    <td th:text="${task.taskCode}">taskCode</td>
-                                    <td th:text="${task.orderCode}">orderCode</td>
-                                    <td th:text="${task.counterCode}">counterCode</td>
-                                    <td th:text="${task.counterName}">counterName</td>
-                                    <td th:text="${task.productCode}">productCode</td>
-                                    <td th:text="${task.productName}">productName</td>
-                                    <td th:text="${task.productCount}">productCount</td>
-                                    <td th:text="${task.productUnit}">productUnit</td>
-                                    <td th:text="${task.createrName}">createrName</td>
-                                    <td th:text="${#dates.format(task.creationDate,'yyyy-MM-dd HH:MM:SS')}">2018-05-25</td>
-                                    <td th:text="${task.requester}">requester</td>
-                                    <td th:text="${#dates.format(task.requesterDate,'yyyy-MM-dd HH:MM:SS')}">2018-05-25</td>
-                                    <td th:switch="${task.taskStatus}" id="status">
-                                        <P th:case="'1'">未领取</P>
-                                        <P th:case="'2'">已领取</P>
-                                        <P th:case="'3'">已完成</P>
-                                    </td>
-                                    <td th:text="${task.description}">description</td>
-                                    <td style="text-align: center">
-                                        <a th:href="@{/task/form(id=${task.id})}"><span class="glyphicon glyphicon-edit" title="编辑"></span></a>
-                                    </td>
-
-                                </tr>
-                                </tbody>
-                            </table>
+                            <div  id="div-table-container">
+                                <table id="table-counter" class="table table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>序号</th>
+                                        <th>任务编码</th>
+                                        <th>加工单号</th>
+                                        <th>柜台编码</th>
+                                        <th>柜台名称</th>
+                                        <th>产成品编码</th>
+                                        <th>产成品名称</th>
+                                        <th>任务数量</th>
+                                        <th>产成品单位</th>
+                                        <th>任务创建人</th>
+                                        <th>任务创建时间</th>
+                                        <th>任务领取人</th>
+                                        <th>任务领取时间</th>
+                                        <th>状态</th>
+                                        <th>编辑</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <!-- /.box-body -->
                     </div>
@@ -92,24 +201,10 @@
     </div>
     <!-- /.content-wrapper -->
 
-
+    <div th:replace="footer"></div>
 </div>
-
 <div th:replace="script"></div>
-
-<!-- page script -->
-<script>
-    $(function () {
-        $('#dataTable').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false
-        });
-    });
-</script>
-<!--<script th:src="@{/js/list-page.js}"></script>-->
+<script th:src="@{/js/constant.js}"></script>
+<script th:src="@{/js/task-manager.js}"></script>
 </body>
 </html>
