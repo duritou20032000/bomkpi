@@ -3,11 +3,16 @@ package com.mr.bomkpi.service;
 import com.mr.bomkpi.entity.TaskCounter;
 import com.mr.bomkpi.entity.UserWhseVo;
 import com.mr.bomkpi.repository.TaskCounterRepository;
-import com.mr.bomkpi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +21,9 @@ import java.util.List;
  */
 @Service
 public class CounterService {
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     private TaskCounterRepository taskCounterRepository;
@@ -68,74 +76,52 @@ public class CounterService {
     /**
      * 根据条件查找，搜索，包含模糊搜索
      * 主要是拼接字符串SQL来进行查找
-     * @param userWhses
-     * @return
+     *
+     * 这个这个主要使用JPA2.0 的criteriaBuilder 的方法来进行，标准的查找方式很好。
+     *
      */
-    public List<TaskCounter> queryListOnCondition(TaskCounter counter, List<UserWhseVo> userWhses, String fuzzy, String fuzzySearch){
-        List<TaskCounter> counterRecoders = new ArrayList<>();
+    public List<TaskCounter> queryListOnCondition(TaskCounter counter, List<UserWhseVo> userWhses, String fuzzy, String fuzzySearch) {
 
-        //获取用户过滤框里的字符
-        List<String> sArray = new ArrayList<String>();
-        if ("true".equals(fuzzySearch)) {
-            //模糊查询
-            if (fuzzy != null && !"".equals(fuzzy)) {
-                sArray.add(" counterCode like '%" + fuzzy + "%'");
-                sArray.add(" whseCode like '%" + fuzzy + "%'");
-                sArray.add(" creater like '%" + fuzzy + "%'");
-                sArray.add(" counterStatus like '%" + fuzzy + "%'");
-            }
-        }else {
-            if (counter.getCounterCode() != null && !"".equals(counter.getCounterCode())) {
-                sArray.add(" counterCode like '%" + counter.getCounterCode() + "%'");
-            }
-            if (counter.getWhseCode() != null && !"".equals(counter.getWhseCode())) {
-                sArray.add(" whseCode like '%" + counter.getWhseCode() + "%'");
-            }
-            if (counter.getCreater() != null && !"".equals(counter.getCreater())) {
-                sArray.add(" creater like '%" + counter.getCreater() + "%'");
-            }
-            if (counter.getCounterStatus() != null && !"".equals(counter.getCounterStatus())) {
-                sArray.add(" counterStatus like '%" + counter.getCounterStatus() + "%'");
-            }
+        List<TaskCounter> counters = taskCounterRepository.findAll(new Specification<TaskCounter>() {
+            @Override
+            public Predicate toPredicate(Root<TaskCounter> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> list = new ArrayList<Predicate>();
 
-        }
-        String condition = "";
-        String whseCodeStr ="";
-        if(userWhses.size() == 1){
-            whseCodeStr=" whseCode= '"+userWhses.get(0).getWhseCode()+"' ";
-        }else if (userWhses.size() > 1) {
-            for (int j = 0; j < userWhses.size() - 1; j++) {
-                whseCodeStr += " whseCode= '"+ userWhses.get(j).getWhseCode() + "' or ";
+                if(userWhses.size() > 0 && userWhses != null) {
+                    CriteriaBuilder.In<Object> in = criteriaBuilder.in(root.get("whseCode"));
+                    for (UserWhseVo userWhs : userWhses) {
+                        in.value(userWhs.getWhseCode());
+                    }
+                    list.add(in);
+                }
+
+                if("true".equals(fuzzySearch)){
+                    if(fuzzy != null && !"".equals(fuzzy)){
+                        Predicate p1 = criteriaBuilder.like(root.get("counterCode").as(String.class), "%" + fuzzy + "%");
+                        Predicate p2 = criteriaBuilder.or(criteriaBuilder.like(root.get("whseCode").as(String.class), "%" + fuzzy + "%"),p1);
+                        Predicate p3 = criteriaBuilder.or(criteriaBuilder.like(root.get("creater").as(String.class), "%" + fuzzy + "%"),p2);
+                        list.add(p3);
+                    }
+                }else{
+                    if (counter.getCounterCode() != null && !"".equals(counter.getCounterCode())) {
+                        Predicate p4 = criteriaBuilder.like(root.get("counterCode").as(String.class), "%" + counter.getCounterCode() + "%");
+                        list.add(p4);
+                    }
+                    if (counter.getWhseCode() != null && !"".equals(counter.getWhseCode())) {
+                        Predicate p5 = criteriaBuilder.like(root.get("whseCode").as(String.class), "%" + counter.getWhseCode() + "%");
+                        list.add(p5);
+                    }
+                    if (counter.getCreater() != null && !"".equals(counter.getCreater())) {
+                        Predicate p6 = criteriaBuilder.like(root.get("creater").as(String.class), "%" + counter.getCreater() + "%");
+                        list.add(p6);
+                    }
+
+                }
+                Predicate[] p = list.toArray(new Predicate[0]);
+                return criteriaBuilder.and(p);
             }
-            whseCodeStr +=" whseCode= '"+  userWhses.get(userWhses.size() - 1).getWhseCode()+"'";
-        }
-
-        String individualSearch = "";
-        if (sArray.size() == 1) {
-            individualSearch = sArray.get(0);
-        } else if (sArray.size() > 1) {
-            for (int i = 0; i < sArray.size() - 1; i++) {
-                individualSearch += sArray.get(i) + " or ";
-            }
-            individualSearch += sArray.get(sArray.size() - 1);
-        }
-//人员没有所属仓库，查看全部，柜台
-        if(StringUtil.isEmptyOrNull(whseCodeStr)){
-            counterRecoders = taskCounterRepository.findAll();
-        }else{
-            if(StringUtil.isEmptyOrNull(individualSearch)){
-                condition=whseCodeStr;
-            }else{
-                condition=whseCodeStr+" or "+individualSearch;
-            }
-            counterRecoders = taskCounterRepository.findAllByConditon(condition);
-        }
-
-
-
-        return counterRecoders;
+        });
+        return counters;
     }
-
-
 
 }

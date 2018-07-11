@@ -128,6 +128,7 @@ function initData($wrapper,$table,counterManage) {
             $(":checkbox[name='cb-check-all']",$wrapper).prop('checked', false);
             //默认选中第一行
             // $("tbody tr",$table).eq(0).click();
+            //第一列序号
             this.api().column(0).nodes().each(function(cell,i){cell.innerHTML=i+1;})
         }
     })).api();
@@ -169,7 +170,8 @@ function initData($wrapper,$table,counterManage) {
 //高级查询
     $("#btn-advanced-search").click(function(){
         counterManage.fuzzySearch = false;
-        _table.draw();
+        _table.ajax.reload();
+        // _table.draw();
     });
 
     $("#btn-save-add").click(function(){
@@ -281,10 +283,10 @@ var counterManage = {
             param.fuzzy = $("#fuzzy-search").val();
             param.fuzzySearch=true;
         }else{
-            param.counterCode = $("#counterCode").val();
+            param.counterCode = $("#counterCode-search").val();
             param.whseCode = $("#whseCode").val();
-            param.counterStatus = $("#counterStatus").val();
-            param.creater = $("#creater").val();
+            param.counterStatus = $("#status-search").val();
+            param.creater = $("#creater-search").val();
             param.fuzzySearch=false;
         }
         //组装分页参数
@@ -463,11 +465,13 @@ function getWhseCode() {
     });
 }
 
+/**
+ * 以下两个没用
+ */
 function clearSelect() {
     // console.log("test");
     $("#whseCode").val("");
     window.location.reload("/counter");
-
 }
 
 function search() {

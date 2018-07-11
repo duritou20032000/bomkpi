@@ -10,8 +10,16 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +27,11 @@ import java.util.List;
 @SpringBootTest
 public class BomkpiApplicationTests {
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Autowired
+    private TaskCounterRepository taskCounterRepository;
 
     @Autowired
     private UserService userService;
@@ -137,6 +150,26 @@ public class BomkpiApplicationTests {
         for (LpnHdrVo lpn : lpns) {
             System.out.println(lpn.getId()+"----"+lpn.getLpnnbr());
         }
+    }
+
+    @Test
+    public void test16(){
+        List<TaskCounter> counters = taskCounterRepository.findAll(new Specification<TaskCounter>() {
+            @Override
+            public Predicate toPredicate(Root<TaskCounter> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> list = new ArrayList<Predicate>();
+
+                Predicate p1 = criteriaBuilder.equal(root.get("whseCode").as(String.class), "BJA03001");
+                list.add(p1);
+
+                Predicate p2 = criteriaBuilder.like(root.get("whseCode").as(String.class), "%test%");
+                list.add(p2);
+
+                Predicate[] p = list.toArray(new Predicate[0]);
+
+                return criteriaBuilder.and(p);
+            }
+        });
     }
 
 
