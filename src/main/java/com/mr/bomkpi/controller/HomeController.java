@@ -3,7 +3,6 @@ package com.mr.bomkpi.controller;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class HomeController {
     }
 
 
-    @PostMapping("/user/login")
+    @GetMapping("/user/login")
     public String login(String username) {
         return "welcome";
     }

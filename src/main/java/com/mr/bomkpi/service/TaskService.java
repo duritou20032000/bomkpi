@@ -1,12 +1,10 @@
 package com.mr.bomkpi.service;
 
 import com.mr.bomkpi.entity.Task;
-import com.mr.bomkpi.entity.TaskCounter;
 import com.mr.bomkpi.entity.UserWhseVo;
 import com.mr.bomkpi.repository.TaskCounterRepository;
 import com.mr.bomkpi.repository.TaskOrderRepository;
 import com.mr.bomkpi.repository.TaskRepository;
-import com.mr.bomkpi.util.DateUtil;
 import com.mr.bomkpi.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +16,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -43,7 +39,7 @@ public class TaskService {
      * 这个这个主要使用JPA2.0 的criteriaBuilder 的方法来进行，标准的查找方式很好。
      *
      */
-    public List<Task> queryListOnCondition(Task task, List<UserWhseVo> userWhses, String fuzzy, String fuzzySearch) {
+    public List<Task> queryListOnCondition(Task task, List<UserWhseVo> userWhses, String fuzzy, String fuzzySearch,String singleOrTeamTask) {
 
         List<Task> tasks = taskRepository.findAll(new Specification<Task>() {
             @Override
@@ -57,6 +53,14 @@ public class TaskService {
 //                    }
 //                    list.add(in);
 //                }
+
+                if(StringUtil.equals("single",singleOrTeamTask)){
+                    Predicate  s= criteriaBuilder.notEqual(root.get("taskStatus").as(Integer.class), 1);
+                    list.add(s);
+                }else if(StringUtil.equals("team",singleOrTeamTask)){
+                    Predicate  t= criteriaBuilder.notEqual(root.get("taskStatus").as(Integer.class), 1);
+                    list.add(t);
+                }
 
                 if("true".equals(fuzzySearch)){
                     if(fuzzy != null && !"".equals(fuzzy)){
