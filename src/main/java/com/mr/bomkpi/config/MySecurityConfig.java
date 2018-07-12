@@ -13,6 +13,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 /**
  * @author Administrator
@@ -25,6 +28,15 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private MyUserDetailService myUserDetailService;
 
+    @Autowired
+    private AuthenticationSuccessHandler MyAuthenticationSuccessHandler;
+
+    @Autowired
+    private AuthenticationFailureHandler MyAuthenticationFailureHandler;
+
+    @Autowired
+    private LogoutSuccessHandler myLogoutSuccessHandler;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -33,26 +45,43 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.formLogin().loginPage("/login")
-                .usernameParameter("username").passwordParameter("password").loginProcessingUrl("/user/login").permitAll()
+        http.formLogin()
+                .loginPage("/authentication/require")
+                .loginProcessingUrl("/user/login").permitAll()
+//                .successHandler(MyAuthenticationSuccessHandler)
+//                .failureHandler(MyAuthenticationFailureHandler)
                 .and()
                 .authorizeRequests()
-                //要求授权 这种.antMatchers("/db/**").access("hasRole('ADMIN') and hasRole('DBA')")  要两个条件都具备才行
-                .antMatchers("/bootstrap/**", "/dist/**", "/js/**", "/plugins/**", "/images/**", "/", "/login").permitAll()
-                .antMatchers("/**").hasAnyAuthority("SystemAdminGroup", "CommonGroup", "SuperUserGroup")
-                .antMatchers("/counter/**").hasAnyAuthority("SystemAdminGroup")
-                .antMatchers("/order/**").hasAnyRole("kuguan", "admin")
-                .antMatchers("/task/**").hasAnyRole("kuguan", "admin")
-                .antMatchers("/singleTask/**", "/teamTask/**").hasAnyRole("caozuogong", "admin")
-                .antMatchers("/check/**").hasAnyRole("check", "admin")
-                .antMatchers("/kpi/**").hasAnyRole("check", "admin")
-                //其余的只要求身份认证
+                .antMatchers("/authentication/require").permitAll()
+                .antMatchers("/bootstrap/**", "/dist/**", "/js/**", "/plugins/**", "/images/**", "/").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
-                .logout().logoutUrl("/user/logout").permitAll()
-                .and()
-                .csrf().disable();
+            .logout()
+                .logoutUrl("/user/logout").permitAll()
+//                .logoutSuccessHandler(myLogoutSuccessHandler)
+                .deleteCookies("sessionId");
+
+//        http.formLogin().loginPage("/login")
+//                .usernameParameter("username").passwordParameter("password").loginProcessingUrl("/user/login").permitAll()
+//                .and()
+//                .authorizeRequests()
+//                //要求授权 这种.antMatchers("/db/**").access("hasRole('ADMIN') and hasRole('DBA')")  要两个条件都具备才行
+//                .antMatchers("/bootstrap/**", "/dist/**", "/js/**", "/plugins/**", "/images/**", "/", "/login").permitAll()
+//                .antMatchers("/**").hasAnyAuthority("SystemAdminGroup", "CommonGroup", "SuperUserGroup")
+//                .antMatchers("/counter/**").hasAnyAuthority("SystemAdminGroup")
+//                .antMatchers("/order/**").hasAnyRole("kuguan", "admin")
+//                .antMatchers("/task/**").hasAnyRole("kuguan", "admin")
+//                .antMatchers("/singleTask/**", "/teamTask/**").hasAnyRole("caozuogong", "admin")
+//                .antMatchers("/check/**").hasAnyRole("check", "admin")
+//                .antMatchers("/kpi/**").hasAnyRole("check", "admin")
+//                //其余的只要求身份认证
+//                .anyRequest()
+//                .authenticated()
+//                .and()
+//                .logout().logoutUrl("/user/logout").permitAll()
+//                .and()
+//                .csrf().disable();
     }
 
     @Override
