@@ -35,6 +35,8 @@ dependencies {
 	runtime('mysql:mysql-connector-java')
 	compile('com.alibaba:druid:1.1.10')
 	compile('redis.clients:jedis:2.9.0')
+	compile('org.springframework.security:spring-security-web')
+	compile('org.springframework.security:spring-security-config')
 
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')

@@ -46,21 +46,21 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.formLogin()
-                .loginPage("/authentication/require")
+                .loginPage("/login")
                 .loginProcessingUrl("/user/login").permitAll()
-//                .successHandler(MyAuthenticationSuccessHandler)
-//                .failureHandler(MyAuthenticationFailureHandler)
+                .successHandler(MyAuthenticationSuccessHandler)
+                .failureHandler(MyAuthenticationFailureHandler)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/authentication/require").permitAll()
-                .antMatchers("/bootstrap/**", "/dist/**", "/js/**", "/plugins/**", "/images/**", "/").permitAll()
+                .antMatchers("/","/login").permitAll()
+                .antMatchers("/bootstrap/**", "/dist/**", "/js/**", "/plugins/**", "/images/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
             .logout()
-                .logoutUrl("/user/logout").permitAll()
-//                .logoutSuccessHandler(myLogoutSuccessHandler)
-                .deleteCookies("sessionId");
+                .logoutUrl("/user/logout")
+                .invalidateHttpSession(true)
+                .logoutSuccessHandler(myLogoutSuccessHandler);
 
 //        http.formLogin().loginPage("/login")
 //                .usernameParameter("username").passwordParameter("password").loginProcessingUrl("/user/login").permitAll()

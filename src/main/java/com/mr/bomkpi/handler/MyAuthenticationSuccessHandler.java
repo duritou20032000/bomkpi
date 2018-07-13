@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -21,12 +22,14 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
     @Autowired
     private ObjectMapper objectMapper;
 
+    private RedirectStrategy redirectStrategy;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         logger.info("登录成功！");
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(objectMapper.writeValueAsString(authentication));
-
+//        response.setContentType("application/json;charset=UTF-8");
+//        response.getWriter().write(objectMapper.writeValueAsString(authentication));
+        response.sendRedirect("/");
 
     }
 }

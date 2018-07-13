@@ -34,11 +34,18 @@
                         <li sec:authentication="principal.authorities"></li>
                     </ul>
                 </li>
+                <!--csrf enable 使用post-->
                 <li class="two">
-                    <a th:href="@{/user/logout}">
-                        <span class="glyphicon glyphicon-user"></span> &nbsp;&nbsp;&nbsp;<span th:text="注销"></span>&nbsp;
-                    </a>
+                    <form th:action="@{/user/logout}"  method="post" class="glyphicon glyphicon-user">
+                        <button type="submit"><span th:text="注销"></span></button>;
+                    </form>
                 </li>
+
+                <!--<li class="two">-->
+                    <!--<a th:href="@{/user/logout}">-->
+                        <!--<span class="glyphicon glyphicon-user"></span> &nbsp;&nbsp;&nbsp;<span th:text="注销"></span>&nbsp;-->
+                    <!--</a>-->
+                <!--</li>-->
             </ul>
         </div>
 
