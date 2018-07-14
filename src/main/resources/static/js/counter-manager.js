@@ -41,7 +41,6 @@ function initData($wrapper,$table,counterManage) {
             });
         },
         "columns": [
-            // CONSTANT.DATA_TABLES.COLUMN.CHECKBOX,
             {
                 "data":null
             },
@@ -61,7 +60,7 @@ function initData($wrapper,$table,counterManage) {
                 "data": "counterStatus",
                 render: function (data, type, row, meta) {
 
-                    return (data == 1?"空闲":"<i class=\"fa fa-male\"></i> 占用");
+                    return (data == 1?"空闲":"<i class=\"fa fa-male\"></i> 使用中...");
                 }
             },
             {
@@ -90,9 +89,9 @@ function initData($wrapper,$table,counterManage) {
                 }
             },
             {
-                 className : "ellipsis", //文字过长时用省略号显示，CSS实现
+                 // className : "ellipsis", //文字过长时用省略号显示，CSS实现
                 "data": "description",
-                render : CONSTANT.DATA_TABLES.RENDER.ELLIPSIS  //会显示省略号的列，需要用title属性实现划过时显示全部文本的效果
+                // render : CONSTANT.DATA_TABLES.RENDER.ELLIPSIS  //会显示省略号的列，需要用title属性实现划过时显示全部文本的效果
             },
             {
                 "data": null,
@@ -107,12 +106,22 @@ function initData($wrapper,$table,counterManage) {
                 "visible":false
             }
         ],
+        columnDefs : [ {
+                            targets : 0,
+                            "orderable" : false
+                        } ,
+                        {
+                            targets : 11,
+                            "orderable" : false
+                        }
+        ],
+        "order" : [ [ 1, 'desc' ]],
         "createdRow": function ( row, data, index ) {
             //行渲染回调,在这里可以对该行dom元素进行任何操作
             //给当前行加样式
-            if (data.role) {
-                $(row).addClass("info");
-            }
+            // if (data.role) {
+            //     $(row).addClass("info");
+            // }
             //给当前行某列加样式
             $('td', row).eq(5).addClass(data.counterStatus?"text-success":"text-error");
             //不使用render，改用jquery文档操作呈现单元格
@@ -125,7 +134,7 @@ function initData($wrapper,$table,counterManage) {
         "drawCallback": function( settings ) {
             //渲染完毕后的回调
             //清空全选状态
-            $(":checkbox[name='cb-check-all']",$wrapper).prop('checked', false);
+            // $(":checkbox[name='cb-check-all']",$wrapper).prop('checked', false);
             //默认选中第一行
             // $("tbody tr",$table).eq(0).click();
             //第一列序号
@@ -326,7 +335,7 @@ var counterManage = {
         $("#counter_code_edit").val(item.counterCode);
         $("#counter_name_edit").val(item.counterName);
         $("#counter_status_edit").val(item.counterStatus);
-        $("#desc_edit").val(item.desc);
+        $("#desc_edit").val(item.description);
         $("#user-edit").show().siblings(".info-block").hide();
     },
     addItemSubmit : function() {

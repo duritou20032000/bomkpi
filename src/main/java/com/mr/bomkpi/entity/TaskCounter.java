@@ -43,7 +43,7 @@ public class TaskCounter implements Serializable{
      * 柜台状态 1 空闲 2使用中
      */
     @Column(name = "counter_status")
-    private String  CounterStatus;
+    private String  counterStatus;
     /**
      * 创建人名称
      */
@@ -118,11 +118,11 @@ public class TaskCounter implements Serializable{
     }
 
     public String getCounterStatus() {
-        return CounterStatus;
+        return counterStatus;
     }
 
     public void setCounterStatus(String counterStatus) {
-        CounterStatus = counterStatus;
+        this.counterStatus = counterStatus;
     }
 
     public String getDescription() {

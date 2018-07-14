@@ -23,24 +23,32 @@
                     <div class="box">
                         <div style="float:left; position:relative; z-index:9999;height:100%;">
                             <div class="pull-left" id="div-task-bind">
-                                <form class="input-append" th:action="@{/user/login}" method="post">
+                                <form class="input-append">
                                     <span>组队入口:</span>
-                                    <input type="text" class="input-medium" placeholder="用户名" id="username" name="username">
-                                    <input type="password" class="input-medium" placeholder="密码" id="password" name ="password">
-                                    <input type="text" class="input-medium" placeholder="团队登录" id="team" name ="team" value="team" disabled="true">
-                                    <button type="submit" class="btn" id="btn-login"><i class="fa fa-bind"></i>登录</button>
+                                    <input type="text" class="input-medium" placeholder="用户名" id="team_username"
+                                           name="username">
+                                    <input type="password" class="input-medium" placeholder="密码" id="team_password"
+                                           name="password">
+                                    <button type="button" class="btn btn-primary" id="btn-login" onclick="teamEnter();">
+                                        <i class="fa fa-bind"></i>登录
+                                    </button>
                                 </form>
                                 <form class="input-append">
                                     <span>任务编码:</span>
                                     <input type="text" class="input-medium" placeholder="任务编码" id="taskCode-bind">
-                                    <input type="text" class="input-large" placeholder="团队成员" id="team-users">
-                                    <button type="button" class="btn" id="btn-task-bind"><i class="fa fa-plus"></i>任务绑定</button>
+                                    团队成员:<input type="text" class="xxxlarge" placeholder="团队成员" id="team-users" readonly="true" disabled="true">
+                                    <button type="button" class="btn btn-primary" id="btn-task-bind"><i id="usersCount" style="color:white"></i>&nbsp;&nbsp;任务绑定</button>
                                 </form>
+                                <div class="input-append">
+                                    <button type="button" class="btn btn-primary" id="showcol"><i class="fa fa-eye"></i>列段显示/隐藏
+                                    </button>
+                                </div>
                             </div>
                             <!--<button type="button" class="btn btn-primary" id="btn-add"><i class="fa fa-plus"></i> 添加</button>-->
                             <!--<button type="button" class="btn btn-danger" id="btn-del"><i class="fa fa-remove"></i>批量删除</button>-->
-                            <button type="button" class="btn btn-primary" id="showcol"><i class="fa fa-eye"></i>列段显示/隐藏</button>
-                            <ul class="showul" style=" list-style:none;display:none; position:absolute; left:180px; top:30px; background:#FFFFFF; border:1px solid #ccc; width:200px;">
+
+                            <ul class="showul"
+                                style=" list-style:none;display:none; position:absolute; left:180px; top:30px; background:#FFFFFF; border:1px solid #ccc; width:200px;">
                                 <li>
                                     <input type="checkbox" class="toggle-vis" data-column="2"/>
                                     任务编码
@@ -99,18 +107,18 @@
                             <div class="input-append">
                                 <input type="text" placeholder="模糊查询(柜台仓库创建人)" id="fuzzy-search">
                                 <div class="btn-group">
-                                    <button type="button" class="btn" id="btn-simple-search"><i
+                                    <button type="button" class="btn btn-primary" id="btn-simple-search"><i
                                             class="fa fa-search"></i></button>
-                                    <button type="button" class="btn" title="高级查询" id="toggle-advanced-search">
+                                    <button type="button" class="btn btn-primary" title="高级查询" id="toggle-advanced-search">
                                         <i class="fa fa-angle-double-down"></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                </div>
+                    </div>
                 </div>
             </div>
-<!--搜索-->
+            <!--搜索-->
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box">
@@ -122,21 +130,24 @@
                                     <span>加工单号:</span>
                                     <input type="text" class="input-medium" placeholder="加工单编码" id="orderCode-search">
                                     <span>柜台编码:</span>
-                                    <input type="text" class="input-xxxlarge" placeholder="加工单编码" id="counterCode-search">
+                                    <input type="text" class="input-xxxlarge" placeholder="加工单编码"
+                                           id="counterCode-search">
                                     <span>产成品编码:</span>
-                                    <select name="productCode-search" id="productCode-search" ></select>
+                                    <select name="productCode-search" id="productCode-search"></select>
                                     <span>状态:</span>
                                     <select class="input-small" id="taskStatus-search">
                                         <option value="1">未领取</option>
                                         <option value="2">已领取</option>
                                         <option value="3">已完成</option>
                                     </select>
-                                    <button type="button" class="btn" id="btn-advanced-search"><i class="fa fa-search"></i> 查询</button>
+                                    <button type="button" class="btn" id="btn-advanced-search"><i
+                                            class="fa fa-search"></i> 查询
+                                    </button>
                                 </form>
                             </div>
                             <div style="clear:both;"></div>
                         </div>
-            <!--编辑-->
+                        <!--编辑-->
                         <div class="block info-block" id="user-edit" style="display:none;">
                             <div class="navbar navbar-inner block-header">
                                 <div class="block-title">订单拆分成任务:<span id="title-edit"></span></div>
@@ -148,13 +159,15 @@
                             <div class="block-content info-content clearfix">
                                 <form id="form-edit">
                                     <div class="control-group" style="display: none;">
-                                            <label class="control-label" for="whse_code_edit"><span class="red-asterisk">*</span>ID:</label>
+                                        <label class="control-label" for="whse_code_edit"><span
+                                                class="red-asterisk">*</span>ID:</label>
                                         <div class="controls">
                                             <input type="text" id="id_edit" name="id_edit" disabled="true">
                                         </div>
                                     </div>
                                     <div class="control-group">
-                                        <label class="control-label" for="orderCode_edit"><span class="red-asterisk">*</span>订单编码:</label>
+                                        <label class="control-label" for="orderCode_edit"><span
+                                                class="red-asterisk">*</span>订单编码:</label>
                                         <div class="controls">
                                             <input type="text" id="orderCode_edit" name="orderCode">
                                         </div>
@@ -166,7 +179,8 @@
                                         </div>
                                     </div>
                                     <div class="control-group">
-                                        <label class="control-label" for="whse_code_edit"><span class="red-asterisk">*</span>仓库编码:</label>
+                                        <label class="control-label" for="whse_code_edit"><span
+                                                class="red-asterisk">*</span>仓库编码:</label>
                                         <div class="controls">
                                             <input type="text" id="whse_code_edit" name="whse_code_edit">
                                         </div>
@@ -177,7 +191,7 @@
                         </div>
 
                         <div class="box-body">
-                            <div  id="div-table-container">
+                            <div id="div-table-container">
                                 <table id="table-counter" class="table table-bordered table-striped">
                                     <thead>
                                     <tr>
@@ -221,6 +235,6 @@
 </div>
 <div th:replace="script"></div>
 <script th:src="@{/js/constant.js}"></script>
-<script th:src="@{/js/singleTask-manager.js}"></script>
+<script th:src="@{/js/teamTask-manager.js}"></script>
 </body>
 </html>

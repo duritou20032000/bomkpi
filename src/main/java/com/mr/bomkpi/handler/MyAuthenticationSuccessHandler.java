@@ -2,6 +2,7 @@ package com.mr.bomkpi.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mr.bomkpi.config.MySecurityConfig;
+import com.mr.bomkpi.util.StringUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +32,7 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
 //        response.setContentType("application/json;charset=UTF-8");
 //        response.getWriter().write(objectMapper.writeValueAsString(authentication));
         response.sendRedirect("/");
+
 
     }
 }

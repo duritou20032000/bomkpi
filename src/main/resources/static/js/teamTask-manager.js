@@ -3,47 +3,48 @@ $.ajaxSetup({headers: {'X-CSRF-TOKEN': $("#csrf_token").attr("content")}});
 $(function () {
     var $wrapper = $('#div-table-container');
     var $table = $('#table-counter');
-    initData($wrapper,$table,counterManage);
+    initData($wrapper, $table, counterManage);
     getWhseCode();
 });
 
-function initData($wrapper,$table,counterManage) {
-    var _table = $table.dataTable($.extend(true,{},CONSTANT.DATA_TABLES.DEFAULT_OPTION, {
-        "ajax": function(data,callback,settings){
+function initData($wrapper, $table, counterManage) {
+    $("#team-users").val($("#username").text());
+    var _table = $table.dataTable($.extend(true, {}, CONSTANT.DATA_TABLES.DEFAULT_OPTION, {
+        "ajax": function (data, callback, settings) {
             //手动控制遮罩
             // $wrapper.spinModal();
             var param = counterManage.getQueryCondition(data);
             $.ajax({
-                    url: "/task/single/getTasks",
-                    data: param,
-                    type: "POST",
-                    dataType: "json",
-                    success: function (result) {
-                        if (result.errorCode) {
-                            alert("查询失败。错误码：" + result.errorCode);
-                            return;
-                        }
-                        var returnData = {};
-                        returnData.draw = result.data.length;//这里直接自行返回了draw计数器,应该由后台返回
-                        returnData.recordsTotal = result.data.length;
-                        returnData.recordsFiltered = result.data.length;//后台不实现过滤功能，每次查询均视作全部结果
-                        returnData.data = result.data;
-                        //关闭遮罩
-                        // $wrapper.spinModal(false);
-                        //调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
-                        //此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
-                        callback(returnData);
-                    },
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        alert("查询失败");
-                        // $wrapper.spinModal(false);
+                url: "/task/single/getTasks",
+                data: param,
+                type: "POST",
+                dataType: "json",
+                success: function (result) {
+                    if (result.errorCode) {
+                        alert("查询失败。错误码：" + result.errorCode);
+                        return;
                     }
+                    var returnData = {};
+                    returnData.draw = result.data.length;//这里直接自行返回了draw计数器,应该由后台返回
+                    returnData.recordsTotal = result.data.length;
+                    returnData.recordsFiltered = result.data.length;//后台不实现过滤功能，每次查询均视作全部结果
+                    returnData.data = result.data;
+                    //关闭遮罩
+                    // $wrapper.spinModal(false);
+                    //调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
+                    //此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
+                    callback(returnData);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("查询失败");
+                    // $wrapper.spinModal(false);
+                }
             });
         },
         "columns": [
             CONSTANT.DATA_TABLES.COLUMN.CHECKBOX,
             {
-                "data":null
+                "data": null
             },
             {
                 "data": "taskCode"
@@ -98,15 +99,15 @@ function initData($wrapper,$table,counterManage) {
             {
                 "data": "taskStatus",
                 render: function (data, type, row, meta) {
-                    var str ='';
-                    if(data == 1){
-                        str="未领取";
-                    }else if(data == 2){
-                        str="已领取";
-                    }else if(data == 3){
-                        str="进行中...";
-                    }else if(data == 4){
-                        str="已完成";
+                    var str = '';
+                    if (data == 1) {
+                        str = "未领取";
+                    } else if (data == 2) {
+                        str = "已领取";
+                    } else if (data == 3) {
+                        str = "进行中...";
+                    } else if (data == 4) {
+                        str = "已完成";
                     }
                     return str;
                 }
@@ -114,8 +115,8 @@ function initData($wrapper,$table,counterManage) {
 
             {
                 "data": null,
-                defaultContent:"",
-                className : "td-operation"
+                defaultContent: "",
+                className: "td-operation"
 
             },
             {
@@ -126,17 +127,17 @@ function initData($wrapper,$table,counterManage) {
             {
                 "data": "id",
                 "sClass": "center",
-                "visible":false
+                "visible": false
             }
         ],
-        "createdRow": function ( row, data, index ) {
+        "createdRow": function (row, data, index) {
             //行渲染回调,在这里可以对该行dom元素进行任何操作
             //给当前行加样式
             if (data.role) {
                 $(row).addClass("info");
             }
             //给当前行某列加样式
-            $('td', row).eq(15).addClass(data.taskStatus?"text-success":"text-error");
+            $('td', row).eq(15).addClass(data.taskStatus ? "text-success" : "text-error");
             //不使用render，改用jquery文档操作呈现单元格
             // var $btnEdit = $('<button type="button" class="btn btn-small btn-primary btn-start">开始</button>');
             // $('td', row).eq(15).append($btnEdit);
@@ -144,14 +145,16 @@ function initData($wrapper,$table,counterManage) {
             $('td', row).eq(15).append($btnDel);
 
         },
-        "drawCallback": function( settings ) {
+        "drawCallback": function (settings) {
             //渲染完毕后的回调
             //清空全选状态
-            $(":checkbox[name='cb-check-all']",$wrapper).prop('checked', false);
+            $(":checkbox[name='cb-check-all']", $wrapper).prop('checked', false);
             //默认选中第一行
             // $("tbody tr",$table).eq(0).click();
             //第一列序号
-            this.api().column(1).nodes().each(function(cell,i){cell.innerHTML=i+1;})
+            this.api().column(1).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            })
         }
     })).api();
 
@@ -168,7 +171,7 @@ function initData($wrapper,$table,counterManage) {
         column.visible(!column.visible());
     });
 
-    $("#btn-add").click(function(){
+    $("#btn-add").click(function () {
         counterManage.addItemInit();
     });
 
@@ -181,34 +184,34 @@ function initData($wrapper,$table,counterManage) {
     //     counterManage.deleteItem(arrItemId);
     // });
 //模糊查询
-    $("#btn-simple-search").click(function(){
+    $("#btn-simple-search").click(function () {
         counterManage.fuzzySearch = true;
 
         //reload效果与draw(true)或者draw()类似,draw(false)则可在获取新数据的同时停留在当前页码,可自行试验
-     _table.ajax.reload();
+        _table.ajax.reload();
 //      _table.draw(false);
 //         _table.draw();
     });
 //高级查询
-    $("#btn-advanced-search").click(function(){
+    $("#btn-advanced-search").click(function () {
         counterManage.fuzzySearch = false;
         _table.ajax.reload();
         // _table.draw();
     });
 
-    $("#btn-save-add").click(function(){
+    $("#btn-save-add").click(function () {
         counterManage.addItemSubmit();
     });
 
-    $("#btn-save-edit").click(function(){
+    $("#btn-save-edit").click(function () {
         counterManage.editItemSubmit();
     });
-    $("#btn-task-bind").click(function(){
+    $("#btn-task-bind").click(function () {
         counterManage.taskBindSubmit();
     });
 
     //行点击事件
-    $("tbody",$table).on("click","tr",function(event) {
+    $("tbody", $table).on("click", "tr", function (event) {
         // $(this).addClass("active").siblings().removeClass("active");
         //获取该行对应的数据
         var item = _table.row($(this).closest('tr')).data();
@@ -216,19 +219,19 @@ function initData($wrapper,$table,counterManage) {
         // counterManage.showItemDetail(item);
     });
 
-    $table.on("change",":checkbox",function() {
+    $table.on("change", ":checkbox", function () {
         if ($(this).is("[name='cb-check-all']")) {
             //全选
-            $(":checkbox",$table).prop("checked",$(this).prop("checked"));
-        }else{
+            $(":checkbox", $table).prop("checked", $(this).prop("checked"));
+        } else {
             //一般复选
-            var checkbox = $("tbody :checkbox",$table);
-            $(":checkbox[name='cb-check-all']",$table).prop('checked', checkbox.length == checkbox.filter(':checked').length);
+            var checkbox = $("tbody :checkbox", $table);
+            $(":checkbox[name='cb-check-all']", $table).prop('checked', checkbox.length == checkbox.filter(':checked').length);
         }
-    }).on("click",".td-checkbox",function(event) {
+    }).on("click", ".td-checkbox", function (event) {
         //点击单元格即点击复选框
-        !$(event.target).is(":checkbox") && $(":checkbox",this).trigger("click");
-    }).on("click",".btn-finish",function() {
+        !$(event.target).is(":checkbox") && $(":checkbox", this).trigger("click");
+    }).on("click", ".btn-finish", function () {
         //点击完成按钮,弹窗填入实际完成数，默认为任务数。
 
 
@@ -237,14 +240,14 @@ function initData($wrapper,$table,counterManage) {
         counterManage.finishItemSubmit([item]);
     });
 
-    $("#toggle-advanced-search").click(function(){
-        $("i",this).toggleClass("fa-angle-double-down fa-angle-double-up");
+    $("#toggle-advanced-search").click(function () {
+        $("i", this).toggleClass("fa-angle-double-down fa-angle-double-up");
         $("#div-advanced-search").slideToggle("fast");
     });
 
-    $("#btn-info-content-collapse").click(function(){
-        $("i",this).toggleClass("fa-minus fa-plus");
-        $("span",this).toggle();
+    $("#btn-info-content-collapse").click(function () {
+        $("i", this).toggleClass("fa-minus fa-plus");
+        $("span", this).toggle();
         $("#user-view .info-content").slideToggle("fast");
     });
     //
@@ -258,15 +261,14 @@ function initData($wrapper,$table,counterManage) {
     //     $("#user-edit").hide();
     // });
 
-
 };
 var counterManage = {
-    currentItem : null,
-    fuzzySearch : true,
-    getQueryCondition : function(data) {
+    currentItem: null,
+    fuzzySearch: true,
+    getQueryCondition: function (data) {
         var param = {};
         //组装排序参数
-        if (data.order&&data.order.length&&data.order[0]) {
+        if (data.order && data.order.length && data.order[0]) {
             switch (data.order[0].column) {
                 case 1:
                     param.orderColumn = "taskCode";
@@ -317,20 +319,20 @@ var counterManage = {
         param.fuzzySearch = counterManage.fuzzySearch;
         if (counterManage.fuzzySearch) {
             param.fuzzy = $("#fuzzy-search").val();
-            param.fuzzySearch=true;
-        }else{
+            param.fuzzySearch = true;
+        } else {
             param.taskCode = $("#taskCode-search").val();
             param.orderCode = $("#orderCode-search").val();
             param.counterCode = $("#counterCode-search").val();
             param.productCode = $("#productCode-search").val();
             param.taskStatus = $("#taskStatus-search").val();
-            param.fuzzySearch=false;
+            param.fuzzySearch = false;
         }
         //组装分页参数
         param.startIndex = data.start;
         param.pageSize = data.length;
-        param.username=$("#username").text();
-        param.singleOrTeamTask="team";
+        param.username = $("#username").text();
+        param.singleOrTeamTask = "team";
         return param;
     },
     // showItemDetail : function(item) {
@@ -401,51 +403,51 @@ var counterManage = {
     //     }
     //
     // },
-    finishItemSubmit : function(item) {
+    finishItemSubmit: function (item) {
         var param = {};
-        param.id= item[0].id;
-        param.taskCode=item[0].taskCode;
-        param.orderCode =item[0].orderCode;
-        param.counterCode =item[0].counterCode;
-        param.counterName =item[0].counterName;
-        param.productCode =item[0].productCode;
+        param.id = item[0].id;
+        param.taskCode = item[0].taskCode;
+        param.orderCode = item[0].orderCode;
+        param.counterCode = item[0].counterCode;
+        param.counterName = item[0].counterName;
+        param.productCode = item[0].productCode;
         param.productName = item[0].productName;
         param.productCount = item[0].productCount;
         param.productUnit = item[0].productUnit;
         param.createrName = item[0].createrName;
-        param.createDate =item[0].createDate;
+        param.createDate = item[0].createDate;
         param.requester = item[0].requester;
         param.requesteDate = item[0].requesteDate;
         param.taskStatus = item[0].taskStatus;
-            $.ajax({
-                url:"/task/complete",
-                data:param,
-                type:"POST",
-                success:function(data){
-                    // alert("保存成功，刷新表格");
-                    if(data.result == 1)
+        $.ajax({
+            url: "/task/complete",
+            data: param,
+            type: "POST",
+            success: function (data) {
+                // alert("保存成功，刷新表格");
+                if (data.result == 1)
                     $('#table-counter').DataTable({"bRetrieve": true}).ajax.reload();
-                }
-            })
+            }
+        })
     },
-    taskBindSubmit:function () {
+    taskBindSubmit: function () {
         $.ajax({
             async: false,
             url: "/task/singleTaskBind",
             data: {
-                "taskCode":$("#taskCode-bind").val().trim(),
-                "username": $("#username").text()
+                "taskCode": $("#taskCode-bind").val().trim(),
+                "username": $("#team-users").val().trim()
             },
             type: "POST",
             success: function (data) {
-                if(data.data == 0){
+                if (data.data == 0) {
                     alert("任务不存在！");
-                }else if(data.data == 1){
+                } else if (data.data == 1) {
                     alert("绑定成功！");
                     $('#table-counter').DataTable({"bRetrieve": true}).ajax.reload();
-                }else if(data.data == 2){
+                } else if (data.data == 2) {
                     alert("任务已被绑定！");
-                }else if(data.data == 3){
+                } else if (data.data == 3) {
                     alert("您有任务未完成,不可以领取新任务！");
                 }
             }
@@ -507,29 +509,42 @@ function getWhseCode() {
     });
 }
 
-/**
- * 以下两个没用
- */
-function clearSelect() {
-    // console.log("test");
-    $("#whseCode").val("");
-    window.location.reload("/counter");
+function teamEnter() {
+    var username = $("#team_username").val().trim();
+    var password = $("#team_password").val().trim();
+
+    if (username != null && password != null
+        && username != "" && password != "") {
+        $.ajax({
+            async: true,
+            url: "/task/team/login",
+            data: {
+                "username": username,
+                "password": password
+            },
+            type: "POST",
+            success: function (result) {
+                if (result.code == 0) {
+                    alert(result.msg);
+                    $("#team_username").val("");
+                    $("#team_password").val("");
+                } else {
+                    var Str= $("#team-users").val();
+                    $("#team-users").val(Str+","+result.data);
+                    $("#usersCount").text( Str.split(",").length+1 );
+                    $("#team_username").val("");
+                    $("#team_password").val("");
+                }
+            },
+            error: function () {
+                alert("服务器异常！")
+            }
+        });
+    } else {
+        alert("用户名密码不能为空！！")
+    }
+
+
 }
 
-function search() {
-    // console.log("search");
-    $.ajax({
-        async: true,
-        url: "/counter/search",
-        data: {
-            "whseCode": $("#search option:selected").val()
-        },
-        type: "POST",
-        success: function (data) {
-            // alert("Test search");
-        }
-
-    });
-
-}
 

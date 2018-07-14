@@ -2,6 +2,7 @@ package com.mr.bomkpi.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mr.bomkpi.config.MySecurityConfig;
+import com.mr.bomkpi.util.StringUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class MyAuthenticationFailureHandler implements AuthenticationFailureHand
         logger.info("登录失败！");
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         response.setContentType("application/json;charset=UTF-8");
-        if(StringUtils.equals("Bad credentials",exception.getMessage())){
+        if (StringUtils.equals("Bad credentials", exception.getMessage())) {
             response.getWriter().write("用户名或密码错误");
         }
     }

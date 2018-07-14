@@ -5,6 +5,8 @@ import com.mr.bomkpi.entity.User;
 import com.mr.bomkpi.entity.UserWhseVo;
 import com.mr.bomkpi.repository.*;
 import com.mr.bomkpi.service.TaskService;
+import com.mr.bomkpi.support.SimpleResponse;
+import com.mr.bomkpi.util.PasswordUtil;
 import com.mr.bomkpi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,13 +49,14 @@ public class TaskController {
             User user = userRepository.findByUsername(username);
             userWhses = userWhseVoRepository.findAllByUserId(user.getUserId());
         }
-        tasks = taskService.queryListOnCondition(task, userWhses, fuzzy, fuzzySearch,null);
+        tasks = taskService.queryListOnCondition(task, userWhses, fuzzy, fuzzySearch, null);
         map.put("data", tasks);
         return map;
     }
 
     /**
      * 单人任务查询，单人所属仓库，显示领取后的任务
+     *
      * @param task
      * @param principal
      * @param fuzzy
@@ -70,7 +73,7 @@ public class TaskController {
             User user = userRepository.findByUsername(username);
             userWhses = userWhseVoRepository.findAllByUserId(user.getUserId());
         }
-        tasks = taskService.queryListOnCondition(task, userWhses, fuzzy, fuzzySearch,"single");
+        tasks = taskService.queryListOnCondition(task, userWhses, fuzzy, fuzzySearch, "single");
         map.put("data", tasks);
         return map;
     }
@@ -107,25 +110,47 @@ public class TaskController {
         return map;
     }
 
+    @PostMapping("/task/team/login")
+    public Map<String, Object> teamLogin(String username, String password) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("code",0);
+        map.put("msg","该用户不存在！");
+
+        List teamUsers = new ArrayList();
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            boolean flag = new PasswordUtil().matches(password, user.getPassword());
+            if (flag) {
+                teamUsers.add(user);
+                map.put("code",1);
+                map.put("msg","OK");
+                map.put("data", user.getUsername());
+            }else{
+                map.put("msg","用户名密码错误！");
+            }
+        }
+        return map;
+    }
+
     /**
-     *  0 保存失败 1 保存成功
+     * 0 保存失败 1 保存成功
+     *
      * @param task
      * @return
      */
     @PostMapping("/task/complete")
-    public Map<String, Object> save(Task task){
+    public Map<String, Object> save(Task task) {
         Map<String, Object> map = new HashMap<>();
-        if(task.getId() != null){
+        if (task.getId() != null) {
             task.setTaskStatus(4);
             taskRepository.save(task);
             map.put("result", 1);
-        }else{
+        } else {
             //输入数据有误
             map.put("result", 0);
         }
         return map;
     }
-
 
 
 }

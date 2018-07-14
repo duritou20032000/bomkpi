@@ -115,6 +115,10 @@ public class CounterService {
                         Predicate p6 = criteriaBuilder.like(root.get("creater").as(String.class), "%" + counter.getCreater() + "%");
                         list.add(p6);
                     }
+                    if (counter.getCounterStatus() != null && !"".equals(counter.getCounterStatus())) {
+                        Predicate p7 = criteriaBuilder.like(root.get("counterStatus").as(String.class), "%" + counter.getCounterStatus() + "%");
+                        list.add(p7);
+                    }
 
                 }
                 Predicate[] p = list.toArray(new Predicate[0]);

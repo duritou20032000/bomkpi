@@ -117,7 +117,7 @@
                                     <select class="input-small" id="status-search">
                                         <option value="">全部</option>
                                         <option value="1">空闲</option>
-                                        <option value="0">占用</option>
+                                        <option value="2">使用中...</option>
                                     </select>
                                     <button type="button" class="btn" id="btn-advanced-search"><i class="fa fa-search"></i> 查询</button>
                                 </form>
@@ -211,7 +211,7 @@
                                         <div class="controls">
                                             <select id="counterStatus" name="counterStatus">
                                                 <option value="1" selected>空闲</option>
-                                                <option value="0">占用</option>
+                                                <option value="2">使用中</option>
                                             </select>
                                         </div>
                                     </div>
@@ -233,7 +233,7 @@
                         </div>
                         <div class="block info-block" id="user-edit" style="display:none;">
                             <div class="navbar navbar-inner block-header">
-                                <div class="block-title">修改柜台:<span id="title-edit"></span></div>
+                                <div class="block-title">&nbsp;&nbsp;&nbsp;&nbsp;柜台编辑:<span id="title-edit"></span></div>
                                 <div class="header-buttons">
                                     <button type="button" class="btn btn-primary" id="btn-save-edit">保存更改</button>
                                     <button type="button" class="btn btn-cancel">取消</button>
@@ -260,15 +260,15 @@
                                         </div>
                                     </div>
                                     <div class="control-group">
-                                        <label class="control-label" for="whse_code_edit"><span class="red-asterisk">*</span>仓库编码:</label>
+                                        <label class="control-label" for="whse_code_edit"><span class="red-asterisk" >*</span>仓库编码:</label>
                                         <div class="controls">
-                                            <input type="text" id="whse_code_edit" name="whse_code_edit">
+                                            <input type="text" id="whse_code_edit" name="whse_code_edit" readonly="true" disabled="true">
                                         </div>
                                     </div>
                                     <div class="control-group" style="display: none;">
                                         <label class="control-label" for="counter_name_edit">仓库名称:</label>
                                         <div class="controls">
-                                            <input type="text" id="counter_name_edit" name="counter_name_edit">
+                                            <input type="text" id="whse_name_edit" name="counter_name_edit">
                                         </div>
                                     </div>
                                     <div class="control-group">
@@ -276,7 +276,7 @@
                                         <div class="controls">
                                             <select id="counter_status_edit" name="counter_status_edit">
                                                 <option value="1" selected>空闲</option>
-                                                <option value="0">占用</option>
+                                                <option value="2">使用中...</option>
                                             </select>
                                         </div>
                                     </div>

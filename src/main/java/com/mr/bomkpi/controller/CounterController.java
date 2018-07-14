@@ -83,14 +83,17 @@ public class CounterController {
 
         String code = counter.getCounterCode();
         String whsecode = counter.getWhseCode();
+        String whseName = whseRepository.findByWhseCode(whsecode).getWhseName();
         if (counterService.isExsist(code, whsecode)) {
             TaskCounter tc = counterService.getIdByCounterCodeAndWhseCode(code, whsecode);
             counter.setId(tc.getId());
+            counter.setWhseName(whseName);
             counter.setCreater(tc.getCreater());
             counter.setCreationDate(new Date());
             counter.setLastModifyName(principal.getName());
             counter.setLastModifyDate(new Date());
         } else {
+            counter.setWhseName(whseName);
             counter.setCreater(principal.getName());
             counter.setCreationDate(new Date());
         }
