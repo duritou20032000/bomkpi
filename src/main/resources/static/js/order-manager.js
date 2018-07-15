@@ -20,7 +20,7 @@ function initData($wrapper,$table,counterManage) {
                     dataType: "json",
                     success: function (result) {
                         if (result.errorCode) {
-                            alert("查询失败。错误码：" + result.errorCode);
+                            alert("查询失败。错误码:" + result.errorCode);
                             return;
                         }
                         var returnData = {};
@@ -41,18 +41,17 @@ function initData($wrapper,$table,counterManage) {
             });
         },
         "columns": [
-            CONSTANT.DATA_TABLES.COLUMN.CHECKBOX,
             {
-                "data":null
+                "data":null,
             },
             {
-                "data": "orderCode"
+                "data": "orderCode",
             },
             {
-                "data": "whseCode"
+                "data": "whseCode",
             },
             {
-                "data": "whseName"
+                "data": "whseName",
             },
             {
                 "data": "orderType",
@@ -62,10 +61,10 @@ function initData($wrapper,$table,counterManage) {
                 }
             },
             {
-                "data": "productCount"
+                "data": "productCount",
             },
             {
-                "data": "productUnit"
+                "data": "productUnit",
             },
             {
                 "data": "deadline",
@@ -78,10 +77,10 @@ function initData($wrapper,$table,counterManage) {
 
             },
             {
-                "data": "productCode"
+                "data": "productCode",
             },
             {
-                "data": "productName"
+                "data": "productName",
             },
             {
                 "data": "syncDate",
@@ -104,7 +103,7 @@ function initData($wrapper,$table,counterManage) {
 
             },
             {
-                "data": "closerName"
+                "data": "closerName",
             },
             {
                 "data": "closeDate",
@@ -143,32 +142,40 @@ function initData($wrapper,$table,counterManage) {
                 "visible":false
             }
         ],
-        "createdRow": function ( row, data, index ) {
-            //行渲染回调,在这里可以对该行dom元素进行任何操作
-            //给当前行加样式
-            if (data.role) {
-                $(row).addClass("info");
+        columnDefs : [ {
+            targets : 0,
+            "orderable" : false
+        } ,
+            {
+                targets : 15,
+                "orderable" : false
             }
-            //给当前行某列加样式
-            $('td', row).eq(10).addClass(data.counterStatus?"text-success":"text-error");
-            //不使用render，改用jquery文档操作呈现单元格
-            var $btnEdit = $('<button type="button" class="btn btn-small btn-primary btn-edit">修改</button>');
-            $('td', row).eq(16).append($btnEdit);
-            var $btnDel = $('<button type="button" class="btn btn-small btn-danger btn-del">删除</button>');
-            $('td', row).eq(16).append($btnEdit).append($btnDel);
+        ],
+        "order" : [ [ 1, 'desc' ],[14,'asc']],
+        "createdRow": function ( row, data, index ) {
+            var $btnEdit = $('<button type="button" class="btn btn-small btn-primary btn-edit">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;辑</button>');
+            $('td', row).eq(15).append($btnEdit);
+            var $btnDel = $('<button type="button" class="btn btn-small btn-danger btn-del">删&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;除</button>');
+            $('td', row).eq(15).append($btnEdit).append($btnDel);
+            var $btnDistribute = $('<button type="button" class="btn btn-small btn-primary btn-distribute">分配任务</button>');
+            $('td', row).eq(15).append($btnEdit).append($btnDel).append($btnDistribute);
 
         },
         "drawCallback": function( settings ) {
-            //渲染完毕后的回调
-            //清空全选状态
-            $(":checkbox[name='cb-check-all']",$wrapper).prop('checked', false);
-            //默认选中第一行
-            // $("tbody tr",$table).eq(0).click();
             //第一列序号
-            this.api().column(1).nodes().each(function(cell,i){cell.innerHTML=i+1;})
+            this.api().column(0).nodes().each(function(cell,i){cell.innerHTML=i+1;})
         }
     })).api();
 
+    $(".datetime").datetimepicker({
+        format: "yyyy-mm-dd hh:ii:ss",//设置时间格式，默认值: 'mm/dd/yyyy'
+        // todayBtn : true,//是否在底部显示“今天”按钮
+        autoclose : true,//当选择一个日期之后是否立即关闭此日期时间选择器
+        todayHighlight : true,//是否高亮当前时间
+        keyboardNavigation : true,//是否允许键盘选择时间
+        language : 'zh-CN',//选择语言，前提是该语言已导入
+        forceParse : true//当选择器关闭的时候，是否强制解析输入框中的值。也就是说，当用户在输入框中输入了不正确的日期，选择器将会尽量解析输入的值，并将解析后的正确值按照给定的格式format设置到输入框中
+    });
     //显示隐藏的小框
     $('#showcol').click(function () {
         $('.showul').toggle();
@@ -185,15 +192,6 @@ function initData($wrapper,$table,counterManage) {
     $("#btn-add").click(function(){
         counterManage.addItemInit();
     });
-
-    // $("#btn-del").click(function(){
-    //     var arrItemId = [];
-    //     $("tbody :checkbox:checked",$table).each(function(i) {
-    //         var item = _table.row($(this).closest('tr')).data();
-    //         arrItemId.push(item);
-    //     });
-    //     counterManage.deleteItem(arrItemId);
-    // });
 //模糊查询
     $("#btn-simple-search").click(function(){
         counterManage.fuzzySearch = true;
@@ -218,13 +216,16 @@ function initData($wrapper,$table,counterManage) {
         counterManage.editItemSubmit();
     });
 
+    $("#btn-save-distribute").click(function(){
+        counterManage.distributeItemSubmit();
+    });
     //行点击事件
     $("tbody",$table).on("click","tr",function(event) {
         $(this).addClass("active").siblings().removeClass("active");
         //获取该行对应的数据
         var item = _table.row($(this).closest('tr')).data();
         counterManage.currentItem = item;
-        counterManage.showItemDetail(item);
+        // counterManage.showItemDetail(item);
     });
 
     $table.on("change",":checkbox",function() {
@@ -250,6 +251,12 @@ function initData($wrapper,$table,counterManage) {
         var item = _table.row($(this).closest('tr')).data();
         $(this).closest('tr').addClass("active").siblings().removeClass("active");
         counterManage.deleteItem([item]);
+    }).on("click",".btn-distribute",function() {
+        //点击任务分配按钮
+        var item = _table.row($(this).closest('tr')).data();
+        $(this).closest('tr').addClass("active").siblings().removeClass("active");
+        counterManage.currentItem = item;
+        counterManage.distributeItemInit(item);
     });
 
     $("#toggle-advanced-search").click(function(){
@@ -272,7 +279,6 @@ function initData($wrapper,$table,counterManage) {
         $("#user-add").hide();
         $("#user-edit").hide();
     });
-
 
 };
 var counterManage = {
@@ -336,8 +342,10 @@ var counterManage = {
         }else{
             param.orderCode = $("#orderCode-search").val();
             param.whseCode = $("#whseCode-search").val();
-            param.orderType = $("#orderType-search").val();
             param.productCode = $("#productCode-search").val();
+            param.deadline=$("#deadline-search").val();
+            param.orderType = $("#orderType-search").val();
+            param.pluginStatus=$("#pluginStatus-search").val();
             param.fuzzySearch=false;
         }
         //组装分页参数
@@ -347,19 +355,19 @@ var counterManage = {
         return param;
     },
     showItemDetail : function(item) {
-        $("#user-view").show().siblings(".info-block").hide();
+        $("#order-distribute").show().siblings(".info-block").hide();
         if (!item) {
-            $("#user-view .prop-value").text("");
+            $("#order-distribute .prop-value").text("");
             return;
         }
-        $("#name-view").text(item.name);
-        $("#position-view").text(item.position);
-        $("#salary-view").text(item.salary);
-        $("#start-date-view").text(item.start_date);
-        $("#office-view").text(item.office);
-        $("#extn-view").text(item.extn);
-        $("#role-view").text(item.role?"管理员":"操作员");
-        $("#status-view").text(item.status?"在线":"离线");
+        // $("#name-view").text(item.name);
+        // $("#position-view").text(item.position);
+        // $("#salary-view").text(item.salary);
+        // $("#start-date-view").text(item.start_date);
+        // $("#office-view").text(item.office);
+        // $("#extn-view").text(item.extn);
+        // $("#role-view").text(item.role?"管理员":"操作员");
+        // $("#status-view").text(item.status?"在线":"离线");
     },
     addItemInit : function() {
         $("#form-add")[0].reset();
@@ -372,16 +380,146 @@ var counterManage = {
         }
         $("#form-edit")[0].reset();
         $("#id_edit").val(item.id);
-        $("#whse_code_edit").val(item.whseCode);
-        $("#whse_name_edit").val(item.whseName);
-        $("#counter_code_edit").val(item.counterCode);
-        $("#counter_name_edit").val(item.counterName);
-        $("#counter_status_edit").val(item.counterStatus);
-        $("#desc_edit").val(item.desc);
+        $("#orderCode-edit").val(item.orderCode);
+        $("#productCount-edit").val(item.productCount);
+        $("#productCode-edit").val(item.productCode);
+        $("#productUnit-edit").val(item.productUnit);
+        $("#productName-edit").val(item.productName);
+        $("#deadline-edit").val(new Date(Date.parse(item.deadline)).Format("yyyy-MM-dd hh:mm:ss"));
+        $("#whseCode_edit").val(item.whseCode);
+        $("#orderType-edit").val(item.orderType);
         $("#user-edit").show().siblings(".info-block").hide();
     },
+    distributeItemInit : function(item) {
+        if (!item) {
+            return;
+        }
+        $("#form-distribute")[0].reset();
+        $("#distribute").val(item.id);
+        $("#orderCode-distribute").val(item.orderCode);
+        $("#productCount-distribute").val(item.productCount);
+        $("#productCode-distribute").val(item.productCode);
+        $("#productUnit-distribute").val(item.productUnit);
+        $("#productName-distribute").val(item.productName);
+        $("#deadline-distribute").val(new Date(Date.parse(item.deadline)).Format("yyyy-MM-dd hh:mm:ss"));
+        $("#whseCode_distribute").val(item.whseCode);
+        $("#orderType-distribute").val(item.orderType);
+        // 查询仓库的柜台，并按照柜台来平均分配
+        var param = {}
+        param.whseCode=item.whseCode;
+        param.orderDir = "counterCode";
+        $("#table-order-task").dataTable($.extend(true,{},CONSTANT.DATA_TABLES.DEFAULT_OPTION,{
+            "ajax":function(data,callback,settings){
+                $.ajax({
+                    url: "/order/getWhseCoutners",
+                    data: param,
+                    type: "POST",
+                    dataType: "json",
+                    success: function (result) {
+                        if(result.code == 0){
+                            console.log("test")
+                            return;
+                        }
+                        var returnData = {};
+                        returnData.data = result.data;
+                        callback(returnData);
+                        $("#user-distribute").show().siblings(".info-block").hide();
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert("查询失败");
+                    }
+                })
+            },
+            "columns": [
+                {
+                    "data":"id",
+                    "sWidth":"3%",
+                    class:"td-checkbox",
+                    "visible":false
+                },
+                {
+                    "data":null,
+                    "sWidth":"5%"
+                },
+                {
+                    "data": "whseCode",
+                    "sWidth":"20%"
+
+                },
+                {
+                    "data": "counterCode",
+                    "sWidth":"20%"
+
+                },
+                {
+                    "data": "counterName",
+                    "sWidth":"20%"
+                },
+                {
+                    "data": "counterStatus",
+                    "sWidth":"10%",
+                    render: function (data, type, row, meta) {
+                        return (data == 1?"空闲":"<i class=\"fa fa-male\"></i> 使用中...");
+                    }
+                },
+                {
+                    "data": null,
+                    "sWidth":"20%",
+                    "defaultContent":"<input class='taskCount' min='0' type='number'/>",
+
+                },
+                {
+                    "data": "id",
+                    "sClass": "center",
+                    "visible":false,
+                    class:"td-counter-id",
+                }
+
+            ],
+            columnDefs : [ {
+                targets : 0,
+                "orderable" : false,
+                "render": function (data, type, row, meta) {
+                    return '<input type="checkbox" value="'+ data + '" name="id"/>';
+                }},
+                {
+                targets : 1,
+                "orderable" : false
+                }
+            ],
+             "order" : [ [ 1, 'asc' ],[3,'asc']],
+            "drawCallback": function( settings ) {
+                //渲染完毕后的回调
+                //清空全选状态
+                 $(":checkbox[name='allChecked']",$("#table-container")).prop('checked', false);
+                //第一列序号
+                this.api().column(1).nodes().each(function(cell,i){cell.innerHTML=i+1;})
+                //将生成数量平均分配给柜台，不在使用中的柜台
+                // $(".taskCount").val(500);
+            }
+        })).api();
+
+        // var  $table=$("#table-order-task");
+        // $table.on("change",":checkbox",function() {
+        //     if ($(this).is("[name='allChecked']")) {
+        //         //全选
+        //         $(":checkbox",$table).prop("checked",$(this).prop("checked"));
+        //
+        //
+        //
+        //     }else{
+        //         //一般复选
+        //         var checkbox = $("tbody :checkbox",$table);
+        //         $(":checkbox[name='allChecked']",$table).prop('checked', checkbox.length == checkbox.filter(':checked').length);
+        //         // var selectRecorder = $table.rows(".selected").data();
+        //     }
+        // }).on("click",".td-checkbox",function(event) {
+        //     //点击单元格即点击复选框
+        //     !$(event.target).is(":checkbox") && $(":checkbox",this).trigger("click");
+        // })
+
+    },
     addItemSubmit : function() {
-        // $.dialog.tips('保存当前添加用户');
         var param = {};
         param.whseCode = $("#whseCode_add").val();
         param.orderCode = $("#orderCode-add").val();
@@ -391,6 +529,7 @@ var counterManage = {
         param.productUnit = $("#productUnit-add").val();
         param.deadline = $("#deadline-add").val();
         param.orderType = $("#orderType-add").val();
+        param.pluginStatus = 1;
         //如若柜台编码和仓库编码为空，则提示必填
         if(param.orderCode == "" || $.trim(param.orderCode).length == 0 ||
             param.whseCode== "" || $.trim(param.whseCode).length == 0   ||
@@ -400,8 +539,6 @@ var counterManage = {
         ){
             alert("*内容不能为空！");
         }else{
-            //仓库的柜台编码不能重复
-
              $.ajax({
                  url:"/order/save",
                  data:param,
@@ -418,17 +555,24 @@ var counterManage = {
         // $.dialog.tips('保存当前编辑用户');
         var param = {};
         param.id = $("#id_edit").val();
-        param.counterCode = $("#counter_code_edit").val();
-        param.counterName = $("#counter_name_edit").val();
-        param.WhseCode = $("#whse_code_edit").val();
-        param.counterStatus = $("#counter_status_edit").val();
-        param.description = $("#desc_edit").val();
+        param.whseCode = $("#whseCode_edit").val();
+        param.orderCode = $("#orderCode-edit").val();
+        param.productCode = $("#productCode-edit").val();
+        param.productCount = $("#productCount-edit").val();
+        param.productName = $("#productName-edit").val();
+        param.productUnit = $("#productUnit-edit").val();
+        param.deadline = $("#deadline-edit").val();
+        param.orderType = $("#orderType-edit").val();
         //如若柜台编码和仓库编码为空，则提示必填
-        if($("#counter_code_edit").val() == "" || $.trim($("#counter_code_edit").val()).length == 0 || $("#whse_code_edit").val() == "" || $.trim($("#whse_code_edit").val()).length == 0){
+        if(param.orderCode == "" || $.trim(param.orderCode).length == 0 ||
+            param.whseCode== "" || $.trim(param.whseCode).length == 0   ||
+            param.productCode== "" || $.trim(param.productCode).length == 0   ||
+            param.productCount== "" || $.trim(param.productCount).length == 0   ||
+            param.productUnit== "" || $.trim(param.productUnit).length == 0){
             alert("*内容不能为空！");
         }else{
             $.ajax({
-                url:"/counter/save",
+                url:"/order/save",
                 data:param,
                 type:"POST",
                 success:function(data){
@@ -438,24 +582,89 @@ var counterManage = {
             })
         }
     },
+    distributeItemSubmit: function(){
+        // alert("text")
+        var param = {};
+        var sum = 0;
+        var taskCounts = $(".taskCount");
+        var taskIds =$(".td-counter-id");
+        var map =[];
+        param.id = $("#id_distribute").val();
+        param.orderCode = $("#orderCode-distribute").val();
+        param.productCount = $("#productCount-distribute").val();
+        param.productCode = $("#productCode-distribute").val();
+        param.productUnit = $("#productUnit-distribute").val();
+        param.productName = $("#productName-distribute").val();
+        param.deadline = $("#deadline-distribute").val();
+        param.whseCode = $("#id_distribute").val();
+        param.orderType = $("#orderType-distribute").val();
+        for (var k=0;k<taskIds.size();k++) {
+            map.push(taskIds[k].value,taskCounts[k].value);
+            sum +=taskCounts[k].value;
+        }
+        param.map = map;
+
+
+
+
+
+
+        $.ajax({
+            url:"/order/generateTask",
+            data:param,
+            type:"POST",
+            success:function(data){
+                // alert("保存成功，刷新表格");
+                // $('#table-counter').DataTable({"bRetrieve": true}).ajax.reload();
+            }
+        })
+    },
     deleteItem : function(selectedItems) {
+        var param = {};
+        param.id = selectedItems[0].id;
         var message;
         if (selectedItems&&selectedItems.length) {
             if (selectedItems.length == 1) {
-                message = "确定要删除 '"+selectedItems[0].name+"' 吗?";
+                message = "确定要删除订单 '"+selectedItems[0].whseCode+"' 吗?";
 
             }else{
                 message = "确定要删除选中的"+selectedItems.length+"项记录吗?";
             }
-            $.dialog.confirmDanger(message, function(){
-                $.dialog.tips('执行删除操作');
+            $.confirm({
+                title: '警告',
+                content:message,
+                buttons: {
+                    formSubmit: {
+                        text: '确认',
+                        btnClass: 'btn-red',
+                        action: function () {
+                            $.ajax({
+                                url:"/order/delete",
+                                data:param,
+                                type:"POST",
+                                success:function(data){
+                                    // alert("保存成功，刷新表格");
+                                    $('#table-counter').DataTable({"bRetrieve": true}).ajax.reload();
+                                }
+                            })
+                        }
+                    },
+                    cancel: {
+                        text: '取消',
+                        btnClass: 'btn-blue'
+                    }
+                }
+
             });
         }else{
-            $.dialog.tips('请先选中要操作的行');
+            $.alert({
+                title: '提示',
+                content: '请先选中要操作的行!'
+            });
         }
     }
 };
-Date.prototype.Format = function (fmt) { //author: meizz
+Date.prototype.Format = function (fmt) {
     var o = {
         "M+": this.getMonth() + 1,
         //月份
@@ -503,36 +712,9 @@ function getWhseCode() {
                     str += " <option value='" + data[i].whseCode + "' >" + data[i].whseCode + "(" + data[i].whseName + ")</option> ";
                 }
             }
-            $("#whseCode-search").html(str);
-            $("#whseCode_add").html(str);
+            $(".whseCode").html(str);
         }
 
     });
-}
-
-/**
- * 以下两个没用
- */
-function clearSelect() {
-    // console.log("test");
-    $("#whseCode").val("");
-    window.location.reload("/counter");
-}
-
-function search() {
-    // console.log("search");
-    $.ajax({
-        async: true,
-        url: "/counter/search",
-        data: {
-            "whseCode": $("#search option:selected").val()
-        },
-        type: "POST",
-        success: function (data) {
-            // alert("Test search");
-        }
-
-    });
-
 }
 

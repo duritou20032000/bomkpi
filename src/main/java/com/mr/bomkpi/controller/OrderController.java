@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.thymeleaf.util.StringUtils;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -83,9 +84,12 @@ public class OrderController {
      * @return
      */
     @PostMapping("/order/generateTask")
-    public String generateTask(Model model, TaskOrder order, Principal principal){
+    public Map<String,Object> generateTask( TaskOrder order,Object table, Principal principal){
+        Map<String, Object> map = new HashMap<>();
         orderService.saveTasks(order,principal);
-        return "task/list";
+        map.put("code",1);
+        map.put("msg","ok");
+        return map;
     }
 
     /**
@@ -100,7 +104,24 @@ public class OrderController {
         }
         orderRepository.save(order);
     }
-
-
-
+    @PostMapping("/order/delete")
+    public void delete(String  id){
+        if(!StringUtil.isEmptyOrNull(id)){
+            orderRepository.deleteById(Long.valueOf(id));
+        }
+    }
+    @PostMapping("/order/getWhseCoutners")
+    public Map<String, Object> getWhseCoutners(String  whseCode){
+        Map<String, Object> map = new HashMap<>();
+        List<TaskCounter> counters = counterRepository.findAllByWhseCode(whseCode);
+        if(counters.size()==0){
+            map.put("code",0);
+            map.put("msg","请先为该仓库创建柜台！");
+        }else{
+            map.put("code",1);
+            map.put("msg","OK");
+            map.put("data",counters);
+        }
+        return map;
+    }
 }

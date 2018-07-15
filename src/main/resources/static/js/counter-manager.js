@@ -467,8 +467,7 @@ function getWhseCode() {
                     str += " <option value='" + data[i].whseCode + "' >" + data[i].whseCode + "(" + data[i].whseName + ")</option> ";
                 }
             }
-            $("#whseCode").html(str);
-            $("#whseCode_add").html(str);
+            $(".whseCode").html(str);
         }
 
     });

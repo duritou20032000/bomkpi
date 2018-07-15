@@ -79,6 +79,14 @@ public class OrderService {
                         Predicate p6 = criteriaBuilder.like(root.get("productCode").as(String.class), "%" + order.getProductCode() + "%");
                         list.add(p6);
                     }
+                    if (order.getOrderType() != null && !"".equals(order.getOrderType())) {
+                        Predicate p7 = criteriaBuilder.like(root.get("orderType").as(String.class), "%" + order.getOrderType() + "%");
+                        list.add(p7);
+                    }
+                    if (order.getPluginStatus() != null && !"".equals(order.getPluginStatus())) {
+                        Predicate p8 = criteriaBuilder.like(root.get("pluginStatus").as(String.class), "%" + order.getPluginStatus() + "%");
+                        list.add(p8);
+                    }
 
                 }
                 Predicate[] p = list.toArray(new Predicate[0]);

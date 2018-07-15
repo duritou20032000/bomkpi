@@ -5,6 +5,7 @@ import com.mr.bomkpi.repository.*;
 import com.mr.bomkpi.service.PolicyService;
 import com.mr.bomkpi.service.UserService;
 import com.mr.bomkpi.util.PasswordUtil;
+import jdk.internal.org.objectweb.asm.tree.analysis.Value;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,6 +171,23 @@ public class BomkpiApplicationTests {
                 return criteriaBuilder.and(p);
             }
         });
+    }
+
+    @Test
+    public void 测试题(){
+//        System.out.println("测试题");
+          int a1 =3;
+          int a2 = a1;
+          a2 =4;
+          System.out.println("a1="+ a1);
+          System.out.println("a2="+ a2);
+//          Student o1 = new Student();
+//           o1.age =5;
+//          Student o2 = o1;
+//           o2.age = 6;
+//        System.out.println("o1.age="+ o1.age);
+//        System.out.println("o2.age="+ o2.age);
+
     }
 
 
