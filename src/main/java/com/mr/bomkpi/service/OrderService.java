@@ -1,5 +1,7 @@
 package com.mr.bomkpi.service;
 
+
+import com.alibaba.fastjson.JSONArray;
 import com.mr.bomkpi.entity.Task;
 import com.mr.bomkpi.entity.TaskCounter;
 import com.mr.bomkpi.entity.TaskOrder;
@@ -19,6 +21,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -96,27 +99,49 @@ public class OrderService {
         return orders;
     }
 
+    public void generateTasksTest(TaskOrder order, HttpServletRequest request, Principal principal){
+        System.out.println("text");
+        String recoders = request.getParameter("recorders");
+        JSONArray jsonArray = JSONArray.parseArray(recoders);
+
+    }
+
     /**
      * 一般都是用1次分配完成任务
      *  1.初次分配，根据分配了数量的柜台生成任务
      *  2.分配数量0的柜台，不生成任务
      */
 
-    public void saveTasks(TaskOrder order, Principal principal){
+    public void generateTasks(TaskOrder order, HttpServletRequest request, Principal principal){
 
         //通过仓库获得柜台，第一轮柜台分配
         String whseCode =  order.getWhseCode();
         if(!StringUtil.isEmptyOrNull(whseCode)){
             List<TaskCounter> counters = counterRepository.findAllByWhseCode(whseCode);
             if(counters != null){
-
-                String newPlan = order.getLastAllocationPlan();
-                String[] plans = newPlan.split(",");
-                //后台验证分配完
-                if(isAllocationOver(plans, Double.valueOf(order.getProductCount()))){
-                    persistTasks(order,plans,counters,principal);
+                for (int i = 0; i < counters.size(); i++) {
+                   String counterCode = request.getParameter("recorders["+i+"][key]");
+                   String orderCount = request.getParameter("recorders["+i+"][value]");
+                   //保存任务
+                    Task task = new Task();
+                    if(task.getCreaterName() == null){
+                        task.setCreaterName(principal.getName());
+                        task.setCreationDate(new Date());
+                    }else{
+                        task.setLastModifyUserName(principal.getName());
+                        task.setLastModifyDate(new Date());
+                    }
+                    //任务编号编码规则
+                    String taskcode = order.getOrderCode()+"-"+ DateUtil.getCurrStrDate("yyyyMMddHHMMSS")+"-"+i;
+                    task.setTaskCode(taskcode);
+                    task.setCounterCode(counterCode);
+                    task.setOrderCode(order.getOrderCode());
+                    task.setProductCode(order.getProductCode());
+                    task.setProductCount(orderCount);
+                    task.setProductUnit(order.getProductUnit());
+                    task.setTaskStatus(1);
+                    taskRepository.save(task);
                 }
-                persistOrderStatus(order);
             }
         }
     }

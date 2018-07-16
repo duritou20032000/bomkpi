@@ -278,6 +278,7 @@ function initData($wrapper,$table,counterManage) {
         // counterManage.showItemDetail(counterManage.currentItem);
         $("#user-add").hide();
         $("#user-edit").hide();
+        $("#user-distribute").hide();
     });
 
 };
@@ -395,7 +396,7 @@ var counterManage = {
             return;
         }
         $("#form-distribute")[0].reset();
-        $("#distribute").val(item.id);
+        $("#id_distribute").val(item.id);
         $("#orderCode-distribute").val(item.orderCode);
         $("#productCount-distribute").val(item.productCount);
         $("#productCode-distribute").val(item.productCode);
@@ -588,36 +589,55 @@ var counterManage = {
         var sum = 0;
         var taskCounts = $(".taskCount");
         var taskIds =$(".td-counter-id");
-        var map =[];
+        var objArray  = [];
+        var count = $("#productCount-distribute").val();
         param.id = $("#id_distribute").val();
         param.orderCode = $("#orderCode-distribute").val();
-        param.productCount = $("#productCount-distribute").val();
+        param.productCount = count;
         param.productCode = $("#productCode-distribute").val();
         param.productUnit = $("#productUnit-distribute").val();
         param.productName = $("#productName-distribute").val();
         param.deadline = $("#deadline-distribute").val();
-        param.whseCode = $("#id_distribute").val();
+        param.whseCode = $("#whseCode_distribute").val();
         param.orderType = $("#orderType-distribute").val();
-        for (var k=0;k<taskIds.size();k++) {
-            map.push(taskIds[k].value,taskCounts[k].value);
-            sum +=taskCounts[k].value;
+        for (var k=0;k<taskCounts.size();k++) {
+            var whseCode =$("#table-order-task")[0].rows[k+1].cells[2].innerHTML;
+            var value = taskCounts[k].value;
+            var obj = { key : whseCode,value:value };
+            objArray.push(obj);
+            sum +=Number(value);
         }
-        param.map = map;
+        param.recorders = objArray;
 
+        if(sum <Number(count)){
+            $.dialog({
+                title:'说明',
+                content:'订单任务需要一次分配完成，请重新分配！'
+            })
 
+        }else if(sum > Number(count)){
+            $.dialog({
+                title:'错误',
+                content:'分配任务数超过订单数量，请重新分配！'
+            })
+        }else{
+            $.ajax({
+                url:"/order/generateTask",
+                data:param,
+                type:"POST",
+                success:function(result){
+                    if(result.code == 1){
+                        $.dialog({
+                            title:'成功',
+                            content:'保存成功！'
+                        })
+                        $("#user-distribute").hide();
+                        $('#table-counter').DataTable({"bRetrieve": true}).ajax.reload();
+                    }
+                }
+            })
+        }
 
-
-
-
-        $.ajax({
-            url:"/order/generateTask",
-            data:param,
-            type:"POST",
-            success:function(data){
-                // alert("保存成功，刷新表格");
-                // $('#table-counter').DataTable({"bRetrieve": true}).ajax.reload();
-            }
-        })
     },
     deleteItem : function(selectedItems) {
         var param = {};

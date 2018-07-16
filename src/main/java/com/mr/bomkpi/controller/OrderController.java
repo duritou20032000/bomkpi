@@ -9,8 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.thymeleaf.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,14 +79,16 @@ public class OrderController {
 
     /**
      * 应该是将order 数据带过来，然后通过order 将柜台的子任务数据量带上，数据落库后，需要分配的次数和分配数量字段。
-     * @param model
      * @param order
      * @return
      */
     @PostMapping("/order/generateTask")
-    public Map<String,Object> generateTask( TaskOrder order,Object table, Principal principal){
+    public Map<String,Object> generateTask(TaskOrder order, HttpServletRequest request, Principal principal){
         Map<String, Object> map = new HashMap<>();
-        orderService.saveTasks(order,principal);
+        orderService.generateTasks(order,request,principal);
+        //订单状态，已分配
+        order.setPluginStatus(3);
+        orderRepository.save(order);
         map.put("code",1);
         map.put("msg","ok");
         return map;
