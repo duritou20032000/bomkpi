@@ -53,32 +53,32 @@ public class HomeController {
 
     @GetMapping("/counter")
     public String counterList() {
-        return "/counter/list";
+        return "counter/list";
     }
 
     @GetMapping("/order")
     public String orderList() {
-        return "/order/list";
+        return "order/list";
     }
     @GetMapping("/task")
     public String taskList() {
-        return "/task/list";
+        return "task/list";
     }
     @GetMapping("/task/person")
     public String taskPersonList() {
-        return "/single/list";
+        return "single/list";
     }
     @GetMapping("/task/team")
     public String taskTeamList() {
-        return "/team/list";
+        return "team/list";
     }
     @GetMapping("/kpi")
     public String kpiList() {
-        return "/kpi/list";
+        return "kpi/list";
     }
     @GetMapping("/kpi/person")
     public String kpiPersonList() {
-        return "/user/list";
+        return "user/list";
     }
 
 }

@@ -14,6 +14,10 @@
         <p class="login-box-msg" th:text="${msg}"></p>
 
         <form th:action="@{/user/login}" method="post">
+            <div>
+                <input type="radio" id="person" name="taskType" value="0" checked="true"/>单人任务
+                <input type="radio" id="people" name="taskType" value="1"/>团队任务
+            </div>
             <div class="form-group has-feedback">
                 <input type="text" class="form-control" placeholder="用户名" name="username" required="required"/>
                 <span class="glyphicon glyphicon-user form-control-feedback"></span>
