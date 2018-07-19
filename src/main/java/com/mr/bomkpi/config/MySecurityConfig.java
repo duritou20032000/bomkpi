@@ -52,7 +52,7 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler(MyAuthenticationFailureHandler)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/","/login","/user/login").permitAll()
+                .antMatchers("/","/index","/login","/user/login").permitAll()
                 .antMatchers("/bootstrap/**", "/dist/**", "/js/**", "/plugins/**", "/images/**").permitAll()
                 .antMatchers("/counter","/counter/**").hasAnyAuthority("SystemAdminGroup", "CommonGroup", "SuperUserGroup")
                 .antMatchers("/order","/order/**").hasAnyAuthority("SystemAdminGroup", "CommonGroup", "SuperUserGroup")
